@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <h2>Login</h2>
+
+  <label>Email ID:</label>
+  <input id="email" type="email" placeholder="Email ID">
+  <br><br>
+
+  <label>Password:</label>
+  <input id="password" type="password" placeholder="Password">
+  <br><br>
+
+  <button id="loginBtn" onclick="verifyPassword()">Login</button>
+  <br><br><br>
+
+  <a href="./register.html">Register?</a>
+
+  <script>
+    async function verifyPassword() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+      const btn = document.getElementById("loginBtn");
+
+      if (!email || !password) {
+        alert("Enter email and password");
+        return;
+      }
+
+      btn.disabled = true;
+
+      const res = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Invalid email or password");
+        btn.disabled = false;
+        return;
+      }
+
+      // Save logged-in user
+      localStorage.setItem("user", JSON.stringify(data.user));
+
+      // Go to app
+      window.location.href = "dashboard.html";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Email Verification</title>
+</head>
+<body>
+  <h2>Register</h2>
+
+  <label>Email:</label>
+  <input type="email" id="email" placeholder="Enter Mail ID">
+  <button id="sendBtn" onclick="sendOtp()">Send OTP</button>
+
+  <br><br>
+
+  <input id="otp" placeholder="Enter OTP" disabled>
+  <button id="verifyBtn" onclick="verifyOtp()" disabled>Verify</button>
+
+  <script>
+    // Clear any old verification state
+    localStorage.removeItem("verifiedEmail");
+
+    async function sendOtp() {
+      const email = document.getElementById("email").value.trim();
+
+      if (!email) {
+        alert("Enter email first");
+        return;
+      }
+
+      const sendBtn = document.getElementById("sendBtn");
+      sendBtn.disabled = true;
+
+      const res = await fetch("http://localhost:3000/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message);
+        sendBtn.disabled = false;
+        return;
+      }
+
+      alert("OTP sent to email");
+
+      // Enable OTP step
+      document.getElementById("otp").disabled = false;
+      document.getElementById("verifyBtn").disabled = false;
+    }
+
+    async function verifyOtp() {
+      const email = document.getElementById("email").value.trim();
+      const otp = document.getElementById("otp").value.trim();
+
+      if (!otp) {
+        alert("Enter OTP");
+        return;
+      }
+
+      const res = await fetch("http://localhost:3000/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message);
+        return;
+      }
+
+      // Store verified email for next page
+      localStorage.setItem("verifiedEmail", email);
+
+      // Move to details step
+      window.location.href = "details.html";
+    }
+  </script>
+</body>
+</html>

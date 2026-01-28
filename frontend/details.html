@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create Account</title>
+</head>
+<body>
+  <h2>Complete Registration</h2>
+
+  <label>Name:</label>
+  <input type="text" id="name"><br><br>
+
+  <label>Vehicle Name:</label>
+  <input type="text" id="vname"><br><br>
+
+  <label>Vehicle Number:</label>
+  <input type="text" id="vnum"><br><br>
+
+  <label>Password:</label>
+  <input type="password" id="password"><br><br>
+
+  <button onclick="createAccount()">Register</button>
+
+  <script>
+    const email = localStorage.getItem("verifiedEmail");
+
+    if (!email) {
+      alert("Verify email first!");
+      window.location.href = "register.html";
+    }
+
+    async function createAccount() {
+      const name = document.getElementById("name").value;
+      const vname = document.getElementById("vname").value;
+      const vnum = document.getElementById("vnum").value;
+      const password = document.getElementById("password").value;
+
+      const res = await fetch("http://localhost:3000/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          name,
+          vehicleName: vname,
+          vehicleNumber: vnum,
+          password
+        })
+      });
+
+      if (res.ok) {
+        alert("Account created!");
+        localStorage.removeItem("verifiedEmail");
+        window.location.href = "login.html";
+      } else {
+        alert("Registration failed");
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vehicle Details</title>
+</head>
+<body>
+
+  <h2>Vehicle Information</h2>
+
+  <div id="info"></div>
+
+  <br>
+
+  <button onclick="contactOwner()">Contact</button>
+  <button onclick="goBack()">Back</button>
+
+  <script>
+    // Get vehicle data from previous page
+    const vehicle = JSON.parse(localStorage.getItem("vehicleData"));
+
+    if (!vehicle) {
+      alert("No vehicle selected");
+      window.location.href = "dashboard.html";
+    } else {
+      document.getElementById("info").innerHTML = `
+        <p><strong>Owner Name:</strong> ${vehicle.ownerName}</p>
+        <p><strong>Vehicle Name:</strong> ${vehicle.vehicleName}</p>
+      `;
+    }
+
+    function contactOwner() {
+      alert("Contact feature coming next (call/chat)");
+      // Later: window.location.href = "call.html";
+    }
+
+    function goBack() {
+      window.location.href = "dashboard.html";
+    }
+  </script>
+
+</body>
+</html>
