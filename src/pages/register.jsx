@@ -95,7 +95,7 @@ export default function Register() {
       <br /><br />
 
       <input
-        placeholder="Enter OTP"
+        placeholder="Enter OTP (123456)"
         value={otp}
         onChange={(e) => setOtp(e.target.value)}
         disabled={!otpSent}
