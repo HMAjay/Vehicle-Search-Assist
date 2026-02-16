@@ -3,9 +3,12 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 require("dotenv").config();
+const Message = require("./models/Message.js");
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "*"
+}));
 app.use(express.json());
 
 /* ------------------ DATABASE ------------------ */
@@ -112,14 +115,16 @@ app.post("/auth/login", async (req, res) => {
     }
 
     res.json({
-      message: "Login successful",
-      user: {
-        email: user.email,
-        name: user.name,
-        vehicleName: user.vehicleName,
-        vehicleNumber: user.vehicleNumber
-      }
-    });
+  message: "Login successful",
+  user: {
+    _id: user._id,   // 🔥 REQUIRED FOR CHAT
+    email: user.email,
+    name: user.name,
+    vehicleName: user.vehicleName,
+    vehicleNumber: user.vehicleNumber
+  }
+});
+
 
   } catch (err) {
     res.status(500).json({ message: "Server error" });
@@ -134,11 +139,109 @@ app.get("/vehicles/:vnum", async (req, res) => {
   }
 
   res.json({
+    ownerId: vehicle._id,
     ownerName: vehicle.name,
     vehicleName: vehicle.vehicleName
   });
 });
 
+app.post("/messages/send", async (req, res) => {
+  try {
+    const { senderId, receiverId, text } = req.body;
+
+    if (!senderId || !receiverId || !text) {
+      return res.status(400).json({ message: "All fields required" });
+    }
+
+    const message = new Message({
+      sender: senderId,
+      receiver: receiverId,
+      text
+    });
+
+    await message.save();
+
+    res.json({ message: "Message sent successfully" });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/messages/chat/:otherUserId/:myUserId", async (req, res) => {
+  try {
+    const { otherUserId, myUserId } = req.params;
+
+    // 🔴 STEP 1 — Mark messages as seen
+    await Message.updateMany(
+      {
+        sender: otherUserId,
+        receiver: myUserId,
+        seen: false
+      },
+      { seen: true }
+    );
+
+    // 🟢 STEP 2 — Fetch conversation
+    const messages = await Message.find({
+      $or: [
+        { sender: myUserId, receiver: otherUserId },
+        { sender: otherUserId, receiver: myUserId }
+      ]
+    }).sort({ createdAt: 1 });
+
+    res.json(messages);
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/messages/inbox/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const messages = await Message.find({
+      $or: [{ sender: userId }, { receiver: userId }]
+    })
+      .sort({ createdAt: -1 })
+      .populate("sender", "name")
+      .populate("receiver", "name");
+
+    const conversations = {};
+
+    messages.forEach(msg => {
+      const otherUser =
+        msg.sender._id.toString() === userId
+          ? msg.receiver
+          : msg.sender;
+
+      // Create conversation entry if not exists
+      if (!conversations[otherUser._id]) {
+        conversations[otherUser._id] = {
+          userId: otherUser._id,
+          name: otherUser.name,
+          hasUnread: false
+        };
+      }
+
+      // 🔴 Mark unread ONLY if message is received and unseen
+      if (
+        msg.receiver._id.toString() === userId &&
+        msg.seen === false
+      ) {
+        conversations[otherUser._id].hasUnread = true;
+      }
+    });
+
+    res.json(Object.values(conversations));
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
 /* ------------------ START SERVER ------------------ */
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
