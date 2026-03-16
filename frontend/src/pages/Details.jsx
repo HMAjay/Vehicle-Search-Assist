@@ -2,6 +2,37 @@ import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { api } from "../utils/api";
 
+// Defined OUTSIDE Details so it doesn't get recreated on every keystroke
+function PasswordInput({ value, onChange, show, onToggle, placeholder, onKeyDown }) {
+  return (
+    <div style={{ position: "relative" }}>
+      <input
+        className="input"
+        type={show ? "text" : "password"}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        style={{ paddingRight: 52 }}
+      />
+      <button
+        type="button"
+        onClick={onToggle}
+        style={{
+          position: "absolute", right: 12, top: "50%",
+          transform: "translateY(-50%)",
+          background: "none", border: "none",
+          cursor: "pointer", color: "var(--text-muted)",
+          fontSize: "0.78rem", fontFamily: "var(--mono)",
+          padding: "2px 4px", letterSpacing: "0.04em",
+        }}
+      >
+        {show ? "HIDE" : "SHOW"}
+      </button>
+    </div>
+  );
+}
+
 export default function Details() {
   const [name,          setName]          = useState("");
   const [vehicleName,   setVehicleName]   = useState("");
@@ -47,34 +78,6 @@ export default function Details() {
   };
 
   if (!email) return null;
-
-  const PasswordInput = ({ value, onChange, show, onToggle, placeholder, onKeyDown }) => (
-    <div style={{ position: "relative" }}>
-      <input
-        className="input"
-        type={show ? "text" : "password"}
-        placeholder={placeholder}
-        value={value}
-        onChange={onChange}
-        onKeyDown={onKeyDown}
-        style={{ paddingRight: 52 }}
-      />
-      <button
-        type="button"
-        onClick={onToggle}
-        style={{
-          position: "absolute", right: 12, top: "50%",
-          transform: "translateY(-50%)",
-          background: "none", border: "none",
-          cursor: "pointer", color: "var(--text-muted)",
-          fontSize: "0.78rem", fontFamily: "var(--mono)",
-          padding: "2px 4px", letterSpacing: "0.04em",
-        }}
-      >
-        {show ? "HIDE" : "SHOW"}
-      </button>
-    </div>
-  );
 
   return (
     <div className="auth-shell">
