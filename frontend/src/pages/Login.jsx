@@ -38,7 +38,6 @@ export default function Login() {
       <div className="auth-card fade-up">
         <div className="auth-logo">VahanConnect</div>
 
-        {/* Success toast after registration */}
         {justRegistered && (
           <div className="ok-msg fade-up" style={{ marginBottom: 20 }}>
             🎉 Account created! Sign in to continue.
@@ -46,14 +45,8 @@ export default function Login() {
         )}
 
         <h1 className="auth-title">Welcome back</h1>
-        <p className="auth-sub" style={{ marginBottom: 6 }}>Sign in to your account to continue.</p>
-        <p style={{
-          fontSize: "0.78rem",
-          color: "var(--text-muted)",
-          marginBottom: 28,
-          fontStyle: "italic",
-        }}>
-          Seamless vehicle owner contact system
+        <p className="auth-sub" style={{ marginBottom: 28 }}>
+          Sign in to your account to continue.
         </p>
 
         <div className="auth-form">
