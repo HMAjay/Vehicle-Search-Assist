@@ -17,7 +17,7 @@ async function request(path, options = {}) {
   const data = await res.json();
 
   // If token expired or invalid, force logout
-  if (res.status === 401) {
+  if (res.status === 401 && !path.startsWith("/auth")) {
     clearUser();
     window.location.href = "/";
     throw new Error(data.message || "Session expired");
