@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import HomePage from "./pages/HomePage";
+import HomePage  from "./pages/HomePage";
 import Login     from "./pages/Login";
 import Register  from "./pages/Register";
 import Details   from "./pages/Details";
@@ -14,19 +14,23 @@ function PrivateRoute({ children }) {
   return getUser() ? children : <Navigate to="/login" replace />;
 }
 
+function PublicRoute({ children }) {
+  return getUser() ? <Navigate to="/dashboard" replace /> : children;
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login"          element={<Login />} />
-        <Route path="/register"  element={<Register />} />
-        <Route path="/details"   element={<Details />} />
-        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-        <Route path="/view"      element={<PrivateRoute><View /></PrivateRoute>} />
+        <Route path="/"             element={<HomePage />} />
+        <Route path="/login"        element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/register"     element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/details"      element={<Details />} />
+        <Route path="/dashboard"    element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/view"         element={<PrivateRoute><View /></PrivateRoute>} />
         <Route path="/chat/:userId" element={<PrivateRoute><Chat /></PrivateRoute>} />
-        <Route path="/inbox"     element={<PrivateRoute><Inbox /></PrivateRoute>} />
-        <Route path="*"          element={<NotFound />} />
+        <Route path="/inbox"        element={<PrivateRoute><Inbox /></PrivateRoute>} />
+        <Route path="*"             element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
