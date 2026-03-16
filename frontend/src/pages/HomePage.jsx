@@ -43,7 +43,7 @@ export default function HomePage() {
 
         <div className="home-hero-badge fade-up">
           <span className="home-hero-dot" />
-          Now live — find any vehicle owner instantly
+          Find. Connect. Solve
         </div>
 
         {/* HERO LOGO PLACEHOLDER */}
@@ -127,7 +127,7 @@ export default function HomePage() {
               },
               {
                 title: "Accident or damage",
-                desc: "Someone has hit your parked car or you've accidentally grazed another vehicle. Contact the owner immediately to handle it responsibly.",
+                desc: "If you've accidentally grazed another vehicle. Contact the owner immediately to handle it responsibly.",
                 icon: (
                   <svg
                     width="22"
@@ -384,7 +384,7 @@ export default function HomePage() {
             Start finding vehicle owners today.
           </h2>
           <p className="home-cta-sub">
-            Free to use. No credit card. Just register and search.
+            Free to use. Just register and search.
           </p>
           <div className="home-cta-actions">
             <button
