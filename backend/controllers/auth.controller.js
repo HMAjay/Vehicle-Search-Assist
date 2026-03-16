@@ -49,6 +49,7 @@ const verifyOtp = (req, res, next) => {
 
 // ── POST /auth/register ───────────────────────────────────────────────────────
 const register = async (req, res, next) => {
+  
   try {
     const { email, name, vehicleName, vehicleNumber, password } = req.body;
 
