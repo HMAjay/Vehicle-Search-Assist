@@ -288,14 +288,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   align-items: center;
   gap: 8px;
 }
-.topnav-brand::before {
-  content: '';
-  display: block;
-  width: 7px;
-  height: 7px;
-  background: var(--amber);
-  border-radius: 2px;
-}
+
 .topnav-actions { display: flex; align-items: center; gap: 8px; }
 
 /* ── Dashboard ────────────────────────────────────────────────────── */
