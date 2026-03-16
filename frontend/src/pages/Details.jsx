@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { api } from "../utils/api";
 
-// Defined OUTSIDE Details so it doesn't get recreated on every keystroke
 function PasswordInput({ value, onChange, show, onToggle, placeholder, onKeyDown }) {
   return (
     <div style={{ position: "relative" }}>
@@ -82,7 +81,7 @@ export default function Details() {
   return (
     <div className="auth-shell">
       <div className="auth-card fade-up" style={{ maxWidth: 480 }}>
-        <div className="auth-logo">VehicleAssist</div>
+        <div className="auth-logo">VahanConnect</div>
 
         <h1 className="auth-title">Almost there</h1>
         <p className="auth-sub">
@@ -162,10 +161,6 @@ export default function Details() {
               : "Create account →"}
           </button>
         </div>
-
-        <p className="auth-footer">
-          Wrong email? <Link to="/register">Start over</Link>
-        </p>
       </div>
     </div>
   );

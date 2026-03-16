@@ -8,8 +8,8 @@ function formatTime(dateStr) {
   const d    = new Date(dateStr);
   const now  = new Date();
   const diff = now - d;
-  if (diff < 60_000)    return "just now";
-  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
+  if (diff < 60_000)     return "just now";
+  if (diff < 3_600_000)  return `${Math.floor(diff / 60_000)}m ago`;
   if (diff < 86_400_000) return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   return d.toLocaleDateString([], { month: "short", day: "numeric" });
 }
@@ -42,7 +42,7 @@ export default function Inbox() {
   return (
     <div className="inbox-shell">
       <nav className="topnav">
-        <span className="topnav-brand">VehicleAssist</span>
+        <span className="topnav-brand">VahanConnect</span>
         <button
           className="btn btn-ghost"
           style={{ padding: "6px 12px" }}
@@ -71,8 +71,7 @@ export default function Inbox() {
 
         {loading && (
           <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
-            <span className="spinner spinner-amber"
-              style={{ width: 24, height: 24 }} />
+            <span className="spinner spinner-amber" style={{ width: 24, height: 24 }} />
           </div>
         )}
 

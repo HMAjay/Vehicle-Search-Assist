@@ -46,7 +46,7 @@ export default function Register() {
   return (
     <div className="auth-shell">
       <div className="auth-card fade-up">
-        <div className="auth-logo">VehicleAssist</div>
+        <div className="auth-logo">VahanConnect</div>
 
         <h1 className="auth-title">Create account</h1>
         <p className="auth-sub">

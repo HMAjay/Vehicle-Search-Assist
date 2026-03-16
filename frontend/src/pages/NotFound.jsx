@@ -6,7 +6,7 @@ export default function NotFound() {
   return (
     <div className="auth-shell">
       <div className="auth-card fade-up" style={{ textAlign: "center" }}>
-        <div className="auth-logo">VehicleAssist</div>
+        <div className="auth-logo">VahanConnect</div>
 
         <p style={{
           fontFamily: "var(--mono)",

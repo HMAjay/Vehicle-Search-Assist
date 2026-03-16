@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { api } from "../utils/api";
 import { setUser, setToken } from "../utils/auth";
 
@@ -10,6 +10,9 @@ export default function Login() {
   const [loading,  setLoading]  = useState(false);
   const [error,    setError]    = useState("");
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const justRegistered = location.state?.registered ?? false;
 
   const handleLogin = async () => {
     setError("");
@@ -33,10 +36,25 @@ export default function Login() {
   return (
     <div className="auth-shell">
       <div className="auth-card fade-up">
-        <div className="auth-logo">VehicleAssist</div>
+        <div className="auth-logo">VahanConnect</div>
+
+        {/* Success toast after registration */}
+        {justRegistered && (
+          <div className="ok-msg fade-up" style={{ marginBottom: 20 }}>
+            🎉 Account created! Sign in to continue.
+          </div>
+        )}
 
         <h1 className="auth-title">Welcome back</h1>
-        <p className="auth-sub">Sign in to your account to continue.</p>
+        <p className="auth-sub" style={{ marginBottom: 6 }}>Sign in to your account to continue.</p>
+        <p style={{
+          fontSize: "0.78rem",
+          color: "var(--text-muted)",
+          marginBottom: 28,
+          fontStyle: "italic",
+        }}>
+          Seamless vehicle owner contact system
+        </p>
 
         <div className="auth-form">
           {error && <div className="err-msg">{error}</div>}
