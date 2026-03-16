@@ -6,60 +6,45 @@ import { getUser, clearUser } from "../utils/auth";
 // ── Sign out confirmation modal ───────────────────────────────────────────────
 function SignOutModal({ onConfirm, onCancel }) {
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 200,
-        background: "rgba(0,0,0,0.6)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        padding: 24,
-        backdropFilter: "blur(4px)",
-      }}
-    >
-      <div
-        className="fade-up"
-        style={{
-          background: "var(--bg-surface)",
-          border: "1px solid var(--border-lit)",
-          borderRadius: "var(--radius-xl)",
-          padding: "32px 28px",
-          width: "100%",
-          maxWidth: 360,
-          boxShadow: "0 24px 64px rgba(0,0,0,0.5)",
-        }}
-      >
-        <p
-          style={{
-            fontFamily: "var(--mono)",
-            fontSize: "0.68rem",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "var(--amber)",
-            marginBottom: 12,
-          }}
-        >
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 200,
+      background: "rgba(0,0,0,0.6)",
+      display: "flex", alignItems: "center", justifyContent: "center",
+      padding: 24,
+      backdropFilter: "blur(4px)",
+    }}>
+      <div className="fade-up" style={{
+        background: "var(--bg-surface)",
+        border: "1px solid var(--border-lit)",
+        borderRadius: "var(--radius-xl)",
+        padding: "32px 28px",
+        width: "100%",
+        maxWidth: 360,
+        boxShadow: "0 24px 64px rgba(0,0,0,0.5)",
+      }}>
+        <p style={{
+          fontFamily: "var(--mono)",
+          fontSize: "0.68rem",
+          letterSpacing: "0.14em",
+          textTransform: "uppercase",
+          color: "var(--amber)",
+          marginBottom: 12,
+        }}>
           Sign out
         </p>
-        <p
-          style={{
-            fontSize: "1.1rem",
-            fontWeight: 600,
-            color: "var(--text-bright)",
-            marginBottom: 8,
-          }}
-        >
+        <p style={{
+          fontSize: "1.1rem",
+          fontWeight: 600,
+          color: "var(--text-bright)",
+          marginBottom: 8,
+        }}>
           Are you sure?
         </p>
-        <p
-          style={{
-            fontSize: "0.875rem",
-            color: "var(--text-mid)",
-            marginBottom: 28,
-          }}
-        >
+        <p style={{
+          fontSize: "0.875rem",
+          color: "var(--text-mid)",
+          marginBottom: 28,
+        }}>
           You'll need to sign in again to access your account.
         </p>
         <div style={{ display: "flex", gap: 10 }}>
@@ -85,14 +70,14 @@ function SignOutModal({ onConfirm, onCancel }) {
 
 // ── Dashboard ─────────────────────────────────────────────────────────────────
 export default function Dashboard() {
-  const [vehicleNumber, setVehicleNumber] = useState("");
-  const [unreadCount, setUnreadCount] = useState(0);
-  const [searching, setSearching] = useState(false);
-  const [error, setError] = useState("");
+  const [vehicleNumber,  setVehicleNumber]  = useState("");
+  const [unreadCount,    setUnreadCount]    = useState(0);
+  const [searching,      setSearching]      = useState(false);
+  const [error,          setError]          = useState("");
   const [showSignOutModal, setShowSignOutModal] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
-  const user = getUser();
+  const user     = getUser();
 
   const [registered] = useState(() => location.state?.registered ?? false);
 
@@ -101,9 +86,7 @@ export default function Dashboard() {
     try {
       const { count } = await api.getUnreadCount(user._id);
       setUnreadCount(count);
-    } catch {
-      /* silent */
-    }
+    } catch { /* silent */ }
   }, [user?._id]);
 
   useEffect(() => {
@@ -120,10 +103,7 @@ export default function Dashboard() {
   const searchVehicle = async () => {
     setError("");
     const vnum = vehicleNumber.trim().toUpperCase();
-    if (!vnum) {
-      setError("Please enter a vehicle number.");
-      return;
-    }
+    if (!vnum) { setError("Please enter a vehicle number."); return; }
     setSearching(true);
     try {
       const data = await api.getVehicle(vnum);
@@ -133,20 +113,19 @@ export default function Dashboard() {
       setError(
         err.message === "Vehicle not found"
           ? `No vehicle registered under "${vnum}".`
-          : err.message,
+          : err.message
       );
     } finally {
       setSearching(false);
     }
   };
 
-  const initials =
-    user?.name
-      ?.split(" ")
-      .map((w) => w[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "?";
+  const initials = user?.name
+    ?.split(" ")
+    .map(w => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "?";
 
   return (
     <div className="dash-shell">
@@ -160,7 +139,6 @@ export default function Dashboard() {
 
       {/* ── Topnav ── */}
       <nav className="topnav">
-        <img src="/logo.png" alt="VahanConnect Logo" className="logo" />
         <span className="topnav-brand">VahanConnect</span>
 
         <div className="topnav-actions">
@@ -169,23 +147,14 @@ export default function Dashboard() {
             style={{ position: "relative", gap: 6 }}
             onClick={() => navigate("/inbox")}
           >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-            >
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-              <polyline points="22,6 12,13 2,6" />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" strokeWidth="2">
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+              <polyline points="22,6 12,13 2,6"/>
             </svg>
             Inbox
             {unreadCount > 0 && (
-              <span
-                className="badge"
-                style={{ position: "absolute", top: -8, right: -8 }}
-              >
+              <span className="badge" style={{ position: "absolute", top: -8, right: -8 }}>
                 {unreadCount}
               </span>
             )}
@@ -198,21 +167,16 @@ export default function Dashboard() {
             Sign out
           </button>
 
-          <div
-            style={{
-              width: 32,
-              height: 32,
-              background: "var(--amber-glow)",
-              border: "1px solid rgba(245,166,35,0.35)",
-              borderRadius: "50%",
-              display: "grid",
-              placeItems: "center",
-              fontFamily: "var(--mono)",
-              fontSize: "0.7rem",
-              fontWeight: 700,
-              color: "var(--amber)",
-            }}
-          >
+          <div style={{
+            width: 32, height: 32,
+            background: "var(--amber-glow)",
+            border: "1px solid rgba(245,166,35,0.35)",
+            borderRadius: "50%",
+            display: "grid", placeItems: "center",
+            fontFamily: "var(--mono)",
+            fontSize: "0.7rem", fontWeight: 700,
+            color: "var(--amber)",
+          }}>
             {initials}
           </div>
         </div>
@@ -226,13 +190,9 @@ export default function Dashboard() {
           </div>
         )}
 
-        <p className="dash-greeting fade-up">
-          Hello, {user?.name?.split(" ")[0]}
-        </p>
+        <p className="dash-greeting fade-up">Hello, {user?.name?.split(" ")[0]}</p>
         <h1 className="dash-title fade-up d1">
-          Find any <span>vehicle</span>
-          <br />
-          owner instantly.
+          Find any <span>vehicle</span><br />owner instantly.
         </h1>
 
         {/* Search */}
@@ -242,11 +202,8 @@ export default function Dashboard() {
               className="search-input"
               placeholder="Enter vehicle number…"
               value={vehicleNumber}
-              onChange={(e) => {
-                setVehicleNumber(e.target.value.toUpperCase());
-                setError("");
-              }}
-              onKeyDown={(e) => e.key === "Enter" && searchVehicle()}
+              onChange={e => { setVehicleNumber(e.target.value.toUpperCase()); setError(""); }}
+              onKeyDown={e => e.key === "Enter" && searchVehicle()}
               autoFocus
             />
             <button
@@ -255,13 +212,9 @@ export default function Dashboard() {
               disabled={searching}
               style={{ padding: "13px 22px", fontSize: "0.9rem" }}
             >
-              {searching ? (
-                <>
-                  <span className="spinner" /> Searching…
-                </>
-              ) : (
-                "Search"
-              )}
+              {searching
+                ? <><span className="spinner" /> Searching…</>
+                : "Search"}
             </button>
           </div>
           {error && <div className="err-msg">{error}</div>}
@@ -279,19 +232,15 @@ export default function Dashboard() {
           </div>
           <div className="info-tile">
             <p className="info-tile-label">Plate number</p>
-            <p
-              className="info-tile-value"
-              style={{ fontFamily: "var(--mono)", letterSpacing: "0.08em" }}
-            >
+            <p className="info-tile-value"
+              style={{ fontFamily: "var(--mono)", letterSpacing: "0.08em" }}>
               {user?.vehicleNumber}
             </p>
           </div>
           <div className="info-tile">
             <p className="info-tile-label">Unread messages</p>
-            <p
-              className="info-tile-value"
-              style={{ color: unreadCount > 0 ? "var(--amber)" : "inherit" }}
-            >
+            <p className="info-tile-value"
+              style={{ color: unreadCount > 0 ? "var(--amber)" : "inherit" }}>
               {unreadCount > 0 ? `${unreadCount} new` : "None"}
             </p>
           </div>
