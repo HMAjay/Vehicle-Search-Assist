@@ -1,100 +1,120 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import { api } from "../utils/api";
+import { getUser } from "../utils/auth";
+
+function formatTime(dateStr) {
+  if (!dateStr) return "";
+  const d    = new Date(dateStr);
+  const now  = new Date();
+  const diff = now - d;
+  if (diff < 60_000)    return "just now";
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
+  if (diff < 86_400_000) return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return d.toLocaleDateString([], { month: "short", day: "numeric" });
+}
 
 export default function Inbox() {
-  const [chats, setChats] = useState([]);
+  const [chats,   setChats]   = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user     = getUser();
 
-useEffect(() => {
-  fetchInbox(); // initial load
+  const fetchInbox = useCallback(async () => {
+    try {
+      const data = await api.getInbox(user._id);
+      setChats(data);
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, [user._id]);
 
-  const interval = setInterval(fetchInbox, 5000); // refresh every 5s
+  useEffect(() => {
+    fetchInbox();
+    const id = setInterval(fetchInbox, 5000);
+    return () => clearInterval(id);
+  }, [fetchInbox]);
 
-  return () => clearInterval(interval); // cleanup
-}, [user._id]);
-
-
-const fetchInbox = () => {
-  fetch(`${import.meta.env.VITE_API_URL}/messages/inbox/${user._id}`)
-    .then(res => res.json())
-    .then(data => setChats(data))
-    .catch(err => console.error(err));
-};
+  const unreadTotal = chats.filter(c => c.hasUnread).length;
 
   return (
-  <div style={{
-    minHeight: "100vh",
-    background: "linear-gradient(135deg, #0f172a, #1e293b)",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
-  }}>
-    <div style={{
-      width: "380px",
-      height: "520px",
-      background: "#0f172a",
-      borderRadius: "18px",
-      boxShadow: "0 15px 40px rgba(0,0,0,0.4)",
-      padding: "20px",
-      display: "flex",
-      flexDirection: "column"
-    }}>
-      <h2 style={{ color: "white", marginBottom: "15px" }}>Inbox</h2>
+    <div className="inbox-shell">
+      <nav className="topnav">
+        <span className="topnav-brand">VehicleAssist</span>
+        <button
+          className="btn btn-ghost"
+          style={{ padding: "6px 12px" }}
+          onClick={() => navigate("/dashboard")}
+        >
+          ← Dashboard
+        </button>
+      </nav>
 
-      <div style={{ overflowY: "auto", flex: 1 }}>
-        {chats.length === 0 && (
-          <p style={{ color: "#94a3b8" }}>No messages yet</p>
+      <main className="inbox-body">
+        <h1 className="inbox-title fade-up">
+          Inbox
+          {unreadTotal > 0 && (
+            <span className="badge" style={{ marginLeft: 10, position: "relative", top: -2 }}>
+              {unreadTotal}
+            </span>
+          )}
+        </h1>
+        <p className="inbox-sub fade-up d1">
+          {loading
+            ? "Loading…"
+            : chats.length === 0
+              ? "No conversations yet."
+              : `${chats.length} conversation${chats.length !== 1 ? "s" : ""}`}
+        </p>
+
+        {loading && (
+          <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+            <span className="spinner spinner-amber"
+              style={{ width: 24, height: 24 }} />
+          </div>
         )}
 
-        {chats.map(chat => (
-          <div
-            key={chat.userId}
-            onClick={() => navigate(`/chat/${chat.userId}`)}
-            style={{
-              background: "#1e293b",
-              padding: "12px 14px",
-              borderRadius: "12px",
-              marginBottom: "10px",
-              cursor: "pointer",
-              transition: "0.2s",
-              border: "1px solid transparent"
-            }}
-            onMouseEnter={e => {
-              e.currentTarget.style.border = "1px solid #3b82f6";
-            }}
-            onMouseLeave={e => {
-              e.currentTarget.style.border = "1px solid transparent";
-            }}
-          >
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              marginBottom: "4px"
-            }}>
-              <strong style={{ color: "white" }}>{chat.name}</strong>
-              <span style={{ fontSize: "12px", color: "#94a3b8" }}>
-                {new Date(chat.time).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit"
-                })}
-              </span>
-            </div>
-
-            <p style={{
-              color: "#cbd5e1",
-              fontSize: "14px",
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis"
-            }}>
-              {chat.lastMessage}
+        {!loading && chats.length === 0 && (
+          <div className="empty-state fade-up">
+            <div className="empty-icon">📭</div>
+            <p className="empty-text">
+              Search for a vehicle on the dashboard<br />and start a conversation.
             </p>
           </div>
-        ))}
-      </div>
-    </div>
-  </div>
-);
+        )}
 
+        {chats.map((chat, i) => {
+          const initials = chat.name
+            ?.split(" ")
+            .map(w => w[0])
+            .slice(0, 2)
+            .join("")
+            .toUpperCase() || "?";
+
+          return (
+            <div
+              key={chat.userId}
+              className={`convo-item fade-up ${chat.hasUnread ? "unread" : ""}`}
+              style={{ animationDelay: `${0.05 + i * 0.06}s` }}
+              onClick={() => navigate(`/chat/${chat.userId}`)}
+            >
+              <div className="convo-avatar">{initials}</div>
+
+              <div className="convo-info">
+                <p className="convo-name">{chat.name}</p>
+                <p className="convo-last">{chat.lastMessage || "No messages yet"}</p>
+              </div>
+
+              <div className="convo-meta">
+                <p className="convo-time">{formatTime(chat.time)}</p>
+                {chat.hasUnread && <div className="unread-dot" />}
+              </div>
+            </div>
+          );
+        })}
+      </main>
+    </div>
+  );
 }

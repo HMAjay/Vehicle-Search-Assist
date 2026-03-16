@@ -1,27 +1,31 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/login";
-import Register from "./pages/register";
-import Details from "./pages/details";
-import Dashboard from "./pages/dashboard";
-import View from "./pages/view";
-import "./index.css";
-import Chat from "./pages/chat";
-import Inbox from "./pages/inbox";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Login     from "./pages/Login";
+import Register  from "./pages/Register";
+import Details   from "./pages/Details";
+import Dashboard from "./pages/Dashboard";
+import View      from "./pages/View";
+import Chat      from "./pages/Chat";
+import Inbox     from "./pages/Inbox";
+import NotFound  from "./pages/NotFound";
+import { getUser } from "./utils/auth";
 
-function App() {
+function PrivateRoute({ children }) {
+  return getUser() ? children : <Navigate to="/" replace />;
+}
+
+export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/chat/:userId" element={<Chat />} />
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/details" element={<Details />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/view" element={<View />} />
-        <Route path="/inbox" element={<Inbox />} />
+        <Route path="/"          element={<Login />} />
+        <Route path="/register"  element={<Register />} />
+        <Route path="/details"   element={<Details />} />
+        <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/view"      element={<PrivateRoute><View /></PrivateRoute>} />
+        <Route path="/chat/:userId" element={<PrivateRoute><Chat /></PrivateRoute>} />
+        <Route path="/inbox"     element={<PrivateRoute><Inbox /></PrivateRoute>} />
+        <Route path="*"          element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
 }
-
-export default App;

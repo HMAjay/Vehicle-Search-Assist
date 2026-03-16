@@ -1,78 +1,104 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { api } from "../utils/api";
+import { setUser, setToken } from "../utils/auth";
 
 export default function Login() {
-  const [email, setEmail] = useState("");
+  const [email,    setEmail]    = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
+  const [showPass, setShowPass] = useState(false);
+  const [loading,  setLoading]  = useState(false);
+  const [error,    setError]    = useState("");
   const navigate = useNavigate();
 
-  const verifyPassword = async () => {
+  const handleLogin = async () => {
+    setError("");
     if (!email.trim() || !password.trim()) {
-      alert("Enter email and password");
+      setError("Please enter your email and password.");
       return;
     }
-
     setLoading(true);
-
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        alert(data.message || "Invalid email or password");
-        setLoading(false);
-        return;
-      }
-
-      // Save logged-in user
-      localStorage.setItem("user", JSON.stringify(data.user));
-
-      // Go to dashboard
+      const data = await api.login(email.trim(), password);
+      setUser(data.user);
+      setToken(data.token);
       navigate("/dashboard");
     } catch (err) {
-      alert("Server error");
+      setError(err.message);
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div>
-      <h2>Login</h2>
+    <div className="auth-shell">
+      <div className="auth-card fade-up">
+        <div className="auth-logo">VehicleAssist</div>
 
-      <label>Email ID:</label>
-      <input
-        type="email"
-        placeholder="Email ID"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
+        <h1 className="auth-title">Welcome back</h1>
+        <p className="auth-sub">Sign in to your account to continue.</p>
 
-      <br /><br />
+        <div className="auth-form">
+          {error && <div className="err-msg">{error}</div>}
 
-      <label>Password:</label>
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+          <div className="field fade-up d1">
+            <label className="label">Email</label>
+            <input
+              className="input"
+              type="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={e => setEmail(e.target.value)}
+              onKeyDown={e => e.key === "Enter" && handleLogin()}
+              autoFocus
+            />
+          </div>
 
-      <br /><br />
+          <div className="field fade-up d2">
+            <label className="label">Password</label>
+            <div style={{ position: "relative" }}>
+              <input
+                className="input"
+                type={showPass ? "text" : "password"}
+                placeholder="••••••••"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+                onKeyDown={e => e.key === "Enter" && handleLogin()}
+                style={{ paddingRight: 52 }}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPass(p => !p)}
+                style={{
+                  position: "absolute", right: 12, top: "50%",
+                  transform: "translateY(-50%)",
+                  background: "none", border: "none",
+                  cursor: "pointer", color: "var(--text-muted)",
+                  fontSize: "0.78rem", fontFamily: "var(--mono)",
+                  padding: "2px 4px", letterSpacing: "0.04em",
+                }}
+              >
+                {showPass ? "HIDE" : "SHOW"}
+              </button>
+            </div>
+          </div>
 
-      <button onClick={verifyPassword} disabled={loading}>
-        {loading ? "Logging in..." : "Login"}
-      </button>
+          <button
+            className="btn btn-primary fade-up d3"
+            style={{ width: "100%", padding: "13px" }}
+            onClick={handleLogin}
+            disabled={loading}
+          >
+            {loading
+              ? <><span className="spinner" /> Signing in…</>
+              : "Sign in →"}
+          </button>
+        </div>
 
-      <br /><br /><br />
-
-      <Link to="/register">Register?</Link>
+        <p className="auth-footer">
+          Don't have an account? <Link to="/register">Create one</Link>
+        </p>
+      </div>
     </div>
   );
 }

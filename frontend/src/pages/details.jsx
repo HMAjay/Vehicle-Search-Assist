@@ -1,92 +1,169 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import { api } from "../utils/api";
 
 export default function Details() {
-  const [name, setName] = useState("");
-  const [vehicleName, setVehicleName] = useState("");
+  const [name,          setName]          = useState("");
+  const [vehicleName,   setVehicleName]   = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
-  const [password, setPassword] = useState("");
-
+  const [password,      setPassword]      = useState("");
+  const [confirm,       setConfirm]       = useState("");
+  const [showPass,      setShowPass]      = useState(false);
+  const [showConfirm,   setShowConfirm]   = useState(false);
+  const [loading,       setLoading]       = useState(false);
+  const [error,         setError]         = useState("");
   const navigate = useNavigate();
+
   const email = localStorage.getItem("verifiedEmail");
 
-  // Same as your "if (!email) redirect"
   useEffect(() => {
-    if (!email) {
-      alert("Verify email first!");
-      navigate("/register");
-    }
+    if (!email) navigate("/register");
   }, [email, navigate]);
 
   const createAccount = async () => {
-    if (!name || !vehicleName || !vehicleNumber || !password) {
-      alert("Fill all fields");
+    setError("");
+    if (!name || !vehicleName || !vehicleNumber || !password || !confirm) {
+      setError("All fields are required.");
       return;
     }
-
+    if (password !== confirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+    if (password.length < 6) {
+      setError("Password must be at least 6 characters.");
+      return;
+    }
+    setLoading(true);
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          name,
-          vehicleName,
-          vehicleNumber,
-          password,
-        }),
-      });
-
-      if (res.ok) {
-        alert("Account created!");
-        localStorage.removeItem("verifiedEmail");
-        navigate("/");
-      } else {
-        const data = await res.json();
-        alert(data.message || "Registration failed");
-      }
-    } catch {
-      alert("Server error");
+      await api.register({ email, name, vehicleName, vehicleNumber, password });
+      localStorage.removeItem("verifiedEmail");
+      navigate("/", { state: { registered: true } });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
     }
   };
 
+  if (!email) return null;
+
+  const PasswordInput = ({ value, onChange, show, onToggle, placeholder, onKeyDown }) => (
+    <div style={{ position: "relative" }}>
+      <input
+        className="input"
+        type={show ? "text" : "password"}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        onKeyDown={onKeyDown}
+        style={{ paddingRight: 52 }}
+      />
+      <button
+        type="button"
+        onClick={onToggle}
+        style={{
+          position: "absolute", right: 12, top: "50%",
+          transform: "translateY(-50%)",
+          background: "none", border: "none",
+          cursor: "pointer", color: "var(--text-muted)",
+          fontSize: "0.78rem", fontFamily: "var(--mono)",
+          padding: "2px 4px", letterSpacing: "0.04em",
+        }}
+      >
+        {show ? "HIDE" : "SHOW"}
+      </button>
+    </div>
+  );
+
   return (
-    <div>
-      <h2>Complete Registration</h2>
+    <div className="auth-shell">
+      <div className="auth-card fade-up" style={{ maxWidth: 480 }}>
+        <div className="auth-logo">VehicleAssist</div>
 
-      <label>Name:</label>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <br /><br />
+        <h1 className="auth-title">Almost there</h1>
+        <p className="auth-sub">
+          Registering{" "}
+          <span style={{ color: "var(--amber)", fontFamily: "var(--mono)", fontSize: "0.85em" }}>
+            {email}
+          </span>
+        </p>
 
-      <label>Vehicle Name:</label>
-      <input
-        type="text"
-        value={vehicleName}
-        onChange={(e) => setVehicleName(e.target.value)}
-      />
-      <br /><br />
+        <div className="auth-form">
+          {error && <div className="err-msg">{error}</div>}
 
-      <label>Vehicle Number:</label>
-      <input
-        type="text"
-        value={vehicleNumber}
-        onChange={(e) => setVehicleNumber(e.target.value)}
-      />
-      <br /><br />
+          <div className="field fade-up d1">
+            <label className="label">Full name</label>
+            <input
+              className="input"
+              placeholder="John Doe"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              autoFocus
+            />
+          </div>
 
-      <label>Password:</label>
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <br /><br />
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div className="field fade-up d2">
+              <label className="label">Vehicle name</label>
+              <input
+                className="input"
+                placeholder="Honda Civic"
+                value={vehicleName}
+                onChange={e => setVehicleName(e.target.value)}
+              />
+            </div>
+            <div className="field fade-up d2">
+              <label className="label">Vehicle number</label>
+              <input
+                className="input"
+                placeholder="MH12AB1234"
+                value={vehicleNumber}
+                onChange={e => setVehicleNumber(e.target.value.toUpperCase())}
+                style={{ fontFamily: "var(--mono)", letterSpacing: "0.08em" }}
+              />
+            </div>
+          </div>
 
-      <button onClick={createAccount}>Register</button>
+          <div className="field fade-up d3">
+            <label className="label">Password</label>
+            <PasswordInput
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              show={showPass}
+              onToggle={() => setShowPass(p => !p)}
+              placeholder="Min. 6 characters"
+            />
+          </div>
+
+          <div className="field fade-up d4">
+            <label className="label">Confirm password</label>
+            <PasswordInput
+              value={confirm}
+              onChange={e => setConfirm(e.target.value)}
+              show={showConfirm}
+              onToggle={() => setShowConfirm(p => !p)}
+              placeholder="Repeat password"
+              onKeyDown={e => e.key === "Enter" && createAccount()}
+            />
+          </div>
+
+          <button
+            className="btn btn-primary fade-up d5"
+            style={{ width: "100%", padding: "13px" }}
+            onClick={createAccount}
+            disabled={loading}
+          >
+            {loading
+              ? <><span className="spinner" /> Creating account…</>
+              : "Create account →"}
+          </button>
+        </div>
+
+        <p className="auth-footer">
+          Wrong email? <Link to="/register">Start over</Link>
+        </p>
+      </div>
     </div>
   );
 }

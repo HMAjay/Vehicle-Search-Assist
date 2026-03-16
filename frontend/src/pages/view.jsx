@@ -1,104 +1,77 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getUser } from "../utils/auth";
 
 export default function View() {
   const [vehicle, setVehicle] = useState(null);
   const navigate = useNavigate();
+  const me = getUser();
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("vehicleData"));
-
-    if (!data) {
-      alert("No vehicle selected");
-      navigate("/dashboard");
-    } else {
-      setVehicle(data);
-    }
+    const data = JSON.parse(localStorage.getItem("vehicleData") || "null");
+    if (!data) navigate("/dashboard");
+    else setVehicle(data);
   }, [navigate]);
-
-  const messageOwner = () => {
-    if (!vehicle.ownerId) {
-      alert("Owner information missing");
-      return;
-    }
-    navigate(`/chat/${vehicle.ownerId}`);
-  };
-
-  const goBack = () => {
-    navigate("/dashboard");
-  };
 
   if (!vehicle) return null;
 
+  const isSelf = vehicle.ownerId === me?._id;
+
+  const initials = vehicle.ownerName
+    ?.split(" ")
+    .map(w => w[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "?";
+
   return (
-    <div style={{
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #0f172a, #1e293b)",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center"
-    }}>
-      <div style={{
-        width: "100%",
-        maxWidth: "500px",
-        background: "#0f172a",
-        borderRadius: "18px",
-        boxShadow: "0 15px 40px rgba(0,0,0,0.4)",
-        padding: "25px",
-        color: "white"
-      }}>
+    <div className="view-shell">
+      <div className="view-card fade-up">
 
-        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-          Vehicle Information
-        </h2>
-
-        <div style={{
-          background: "#1e293b",
-          padding: "15px",
-          borderRadius: "12px",
-          marginBottom: "15px"
-        }}>
-          <p style={{ margin: "6px 0" }}>
-            <strong style={{ color: "#60a5fa" }}>Owner Name:</strong> {vehicle.ownerName}
-          </p>
-          <p style={{ margin: "6px 0" }}>
-            <strong style={{ color: "#60a5fa" }}>Vehicle Name:</strong> {vehicle.vehicleName}
-          </p>
+        {/* Header */}
+        <div className="view-header">
+          <span className="view-tag">Vehicle found</span>
+          <p className="view-plate">{vehicle.vehicleNumber}</p>
+          <p className="view-model">{vehicle.vehicleName}</p>
         </div>
 
-        <div style={{
-          display: "flex",
-          gap: "10px",
-          justifyContent: "space-between"
-        }}>
-          <button
-            onClick={messageOwner}
-            style={{
-              flex: 1,
-              padding: "10px",
-              borderRadius: "10px",
-              border: "none",
-              background: "#2563eb",
-              color: "white",
-              fontWeight: "bold",
-              cursor: "pointer"
-            }}
-          >
-            💬 Message Owner
-          </button>
+        <hr className="view-divider" />
+
+        {/* Owner */}
+        <div className="view-owner">
+          <div className="view-avatar">{initials}</div>
+          <div className="view-owner-info">
+            <p>{vehicle.ownerName}</p>
+            <p>Registered owner</p>
+          </div>
+        </div>
+
+        <hr className="view-divider" />
+
+        {/* Actions */}
+        <div className="view-actions" style={{ padding: "20px 28px 28px" }}>
+          {isSelf ? (
+            <div className="err-msg" style={{ flex: 1, textAlign: "center" }}>
+              This is your own vehicle.
+            </div>
+          ) : (
+            <button
+              className="btn btn-primary"
+              style={{ flex: 1, padding: "12px" }}
+              onClick={() => navigate(`/chat/${vehicle.ownerId}`)}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" strokeWidth="2.2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              </svg>
+              Message owner
+            </button>
+          )}
 
           <button
-            onClick={goBack}
-            style={{
-              flex: 1,
-              padding: "10px",
-              borderRadius: "10px",
-              border: "none",
-              background: "#334155",
-              color: "white",
-              fontWeight: "bold",
-              cursor: "pointer"
-            }}
+            className="btn btn-ghost"
+            style={{ flex: 1, padding: "12px" }}
+            onClick={() => navigate("/dashboard")}
           >
             ← Back
           </button>
