@@ -161,12 +161,10 @@ Redeploy after setting environment variables.
 
 ## Future Improvements
 
-- JWT-based authentication
 - Real OTP email integration
 - Rate limiting for search requests
 - Admin moderation panel
 - Real-time messaging with WebSockets
-- Improved UI/UX enhancements
 - Production-grade validation and error handling
 
 ---

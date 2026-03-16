@@ -68,7 +68,7 @@ export default function Details() {
     try {
       await api.register({ email, name, vehicleName, vehicleNumber, password });
       localStorage.removeItem("verifiedEmail");
-      navigate("/", { state: { registered: true } });
+      navigate("/login", { state: { registered: true } });
     } catch (err) {
       setError(err.message);
     } finally {
