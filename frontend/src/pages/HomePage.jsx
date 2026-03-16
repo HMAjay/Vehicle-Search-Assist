@@ -80,7 +80,7 @@ export default function HomePage() {
           {[
             ["3s", "Avg search time"],
             [vehicleCount, "Registered vehicles"],
-            ["Free", "Always"],
+            ["Free", "Service"],
           ].map(([num, label]) => (
             <div key={label} className="home-stat">
               <div className="home-stat-num">{num}</div>
