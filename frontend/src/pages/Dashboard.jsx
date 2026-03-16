@@ -139,7 +139,8 @@ export default function Dashboard() {
 
       {/* ── Topnav ── */}
       <nav className="topnav">
-        <span className="topnav-brand">VahanConnect</span>
+        <span className="topnav-brand">
+          <img src="/logo.png" alt="logo" style={{ width: 32, height: "auto" }} />VahanConnect</span>
 
         <div className="topnav-actions">
           <button

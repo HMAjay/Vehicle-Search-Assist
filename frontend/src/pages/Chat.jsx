@@ -98,7 +98,6 @@ export default function Chat() {
 
         <div>
           <p className="chat-name">{otherName}</p>
-          <p className="chat-status">● online</p>
         </div>
       </div>
 
@@ -122,7 +121,7 @@ export default function Chat() {
               {showTime && (
                 <div style={{ textAlign: "center", margin: "12px 0" }}>
                   <span style={{
-                    fontSize: "0.68rem", color: "var(--text-muted)",
+                    fontSize: "0.9rem", color: "white",
                     fontFamily: "var(--mono)", background: "var(--bg-raised)",
                     padding: "3px 10px", borderRadius: 99,
                     border: "1px solid var(--border)",
