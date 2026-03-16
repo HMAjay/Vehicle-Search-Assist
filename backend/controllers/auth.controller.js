@@ -47,46 +47,23 @@ const verifyOtp = (req, res, next) => {
   }
 };
 
-// ── POST /auth/register ───────────────────────────────────────────────────────
 const register = async (req, res, next) => {
-  
   try {
+    console.log("REGISTER BODY:", req.body); // add this
+
     const { email, name, vehicleName, vehicleNumber, password } = req.body;
 
-    // Presence check
     if (!email || !name || !vehicleName || !vehicleNumber || !password) {
       return res.status(400).json({ message: "All fields are required" });
-    }
-
-    // Validation
-    if (!EMAIL_REGEX.test(email.trim())) {
-      return res.status(400).json({ message: "Invalid email address" });
-    }
-    if (password.length < 6) {
-      return res.status(400).json({ message: "Password must be at least 6 characters" });
-    }
-    if (name.trim().length > 60) {
-      return res.status(400).json({ message: "Name is too long" });
-    }
-    if (!VEHICLE_NUMBER_REGEX.test(vehicleNumber.toUpperCase().trim())) {
-      return res.status(400).json({ message: "Vehicle number must be 4–15 uppercase letters/digits" });
-    }
-
-    // Duplicate checks
-    const existingEmail = await User.findOne({ email: email.toLowerCase().trim() });
-    if (existingEmail) {
-      return res.status(400).json({ message: "Email is already registered" });
-    }
-    const existingVehicle = await User.findOne({ vehicleNumber: vehicleNumber.toUpperCase().trim() });
-    if (existingVehicle) {
-      return res.status(400).json({ message: "Vehicle number is already registered" });
     }
 
     const user = new User({ email, name, vehicleName, vehicleNumber, password });
     await user.save();
 
     res.status(201).json({ message: "Account created successfully" });
+
   } catch (err) {
+    console.error("REGISTER ERROR:", err); // add this
     next(err);
   }
 };
