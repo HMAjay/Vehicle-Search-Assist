@@ -2,7 +2,7 @@ const express = require("express");
 const router  = express.Router();
 
 const { getVehicleByNumber } = require("../controllers/vehicle.controller");
-const { protect }            = require("../middleware/auth.middleware");
+const { protect } = require("../middleware/auth.middleware");
 router.get("/count", async (req, res, next) => {
   try {
     const User = require("../models/User");

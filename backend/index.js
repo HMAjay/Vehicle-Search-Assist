@@ -9,6 +9,7 @@ const messageRoutes = require("./routes/message.routes");
 const { errorHandler } = require("./middleware/error.middleware");
 
 const app = express();
+app.set("trust proxy", 1);
 
 // ── CORS ─────────────────────────────────────────────────────────────────────
 app.use(cors({
