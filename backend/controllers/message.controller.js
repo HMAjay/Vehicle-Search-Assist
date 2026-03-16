@@ -69,6 +69,7 @@ const getInbox = async (req, res, next) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
+    // Sort newest first — first encounter per conversation = most recent message
     const messages = await Message.find({
       $or: [{ sender: userId }, { receiver: userId }],
     })
@@ -84,12 +85,13 @@ const getInbox = async (req, res, next) => {
       const otherId = otherUser._id.toString();
 
       if (!conversations[otherId]) {
+        // First encounter is always the latest message — set it once, never overwrite
         conversations[otherId] = {
-          userId:    otherId,
-          name:      otherUser.name,
+          userId:      otherId,
+          name:        otherUser.name,
           lastMessage: msg.text,
-          time:      msg.createdAt,
-          hasUnread: false,
+          time:        msg.createdAt,
+          hasUnread:   false,
         };
       }
 
