@@ -222,7 +222,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
 }
 .auth-logo {
   font-family: var(--mono);
-  font-size: 0.7rem;
+  font-size: 1.0rem;
   font-weight: 700;
   letter-spacing: 0.18em;
   text-transform: uppercase;
@@ -241,7 +241,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   border-radius: 2px;
 }
 .auth-title {
-  font-size: 1.75rem;
+  font-size: 1.4rem;
   font-weight: 600;
   color: var(--text-bright);
   margin-bottom: 6px;
@@ -412,11 +412,11 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
 }
 .view-tag {
   display: inline-block;
-  font-size: 0.68rem;
+  font-size: 1.2rem;
   font-family: var(--mono);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--amber);
+  color: var(--green);
   background: var(--amber-soft);
   border: 1px solid rgba(245,166,35,0.2);
   padding: 4px 10px;
@@ -431,7 +431,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   letter-spacing: 0.1em;
   margin-bottom: 4px;
 }
-.view-model { font-size: 0.95rem; color: var(--text-mid); margin-bottom: 24px; }
+.view-model { font-size: 1.0rem; color: var(--text-mid); margin-bottom: 24px; }
 .view-divider { border: none; border-top: 1px solid var(--border); margin: 0; }
 .view-owner {
   padding: 20px 28px;
@@ -453,7 +453,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   flex-shrink: 0;
 }
 .view-owner-info p:first-child { font-weight: 500; color: var(--text-bright); }
-.view-owner-info p:last-child { font-size: 0.8rem; color: var(--text-muted); }
+.view-owner-info p:last-child { font-size: 0.9rem; color: var(--text-muted); }
 .view-actions {
   padding: 0 28px 28px;
   display: flex;

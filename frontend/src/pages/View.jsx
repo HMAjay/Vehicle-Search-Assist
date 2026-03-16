@@ -42,7 +42,7 @@ export default function View() {
           <div className="view-avatar">{initials}</div>
           <div className="view-owner-info">
             <p>{vehicle.ownerName}</p>
-            <p>Registered owner</p>
+            <p style={{ fontSize: "1.0rem" }}>Registered Owner</p>
           </div>
         </div>
 
