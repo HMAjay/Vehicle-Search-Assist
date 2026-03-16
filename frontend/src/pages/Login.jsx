@@ -36,7 +36,10 @@ export default function Login() {
   return (
     <div className="auth-shell">
       <div className="auth-card fade-up">
-        <div className="auth-logo">VahanConnect</div>
+        <div className="auth-logo">
+          <img src="/logo.png" alt="logo" style={{ width: 32, height: "auto" }} />
+          VahanConnect
+        </div>
 
         {justRegistered && (
           <div className="ok-msg fade-up" style={{ marginBottom: 20 }}>

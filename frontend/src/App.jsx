@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import HomePage from "./pages/HomePage";
 import Login     from "./pages/Login";
 import Register  from "./pages/Register";
 import Details   from "./pages/Details";
@@ -10,14 +11,15 @@ import NotFound  from "./pages/NotFound";
 import { getUser } from "./utils/auth";
 
 function PrivateRoute({ children }) {
-  return getUser() ? children : <Navigate to="/" replace />;
+  return getUser() ? children : <Navigate to="/login" replace />;
 }
 
 export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/"          element={<Login />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/login"          element={<Login />} />
         <Route path="/register"  element={<Register />} />
         <Route path="/details"   element={<Details />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />

@@ -33,7 +33,7 @@ export const api = {
   verifyOtp: (email, otp)      => request("/auth/verify-otp", { method: "POST", body: JSON.stringify({ email, otp }) }),
   register:  (payload)         => request("/auth/register",   { method: "POST", body: JSON.stringify(payload) }),
   login:     (email, password) => request("/auth/login",      { method: "POST", body: JSON.stringify({ email, password }) }),
-
+  getVehicleCount: () => request("/vehicles/count"),
   // Protected (token required)
   getVehicle:      (vnum)                       => request(`/vehicles/${vnum}`),
   sendMessage:     (senderId, receiverId, text) => request("/messages/send",                        { method: "POST", body: JSON.stringify({ senderId, receiverId, text }) }),
