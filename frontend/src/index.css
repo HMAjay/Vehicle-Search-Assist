@@ -63,6 +63,9 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+@keyframes drawArrow {
+  to { stroke-dashoffset: 0; }
+}
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
@@ -146,6 +149,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   background: var(--bg-raised);
   color: var(--text-mid);
   border: 1px solid var(--border);
+  font-size:1.0rem;
 }
 .btn-ghost:hover:not(:disabled) {
   background: var(--bg-overlay);
@@ -265,7 +269,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
 
 /* ── Topnav ───────────────────────────────────────────────────────── */
 .topnav {
-  height: 56px;
+  height: 70px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -363,7 +367,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
 .info-tile-label {
   font-size: 0.7rem;
   font-family: var(--mono);
-  color: var(--text-muted);
+  color: yellow;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 6px;
