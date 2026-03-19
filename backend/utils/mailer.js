@@ -9,6 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 async function sendOtpEmail(toEmail, otp) {
+  console.log("Sending to:", toEmail, "from:", process.env.MAIL_USER);
   await transporter.sendMail({
     from: `"VahanConnect" <${process.env.MAIL_USER}>`,
     to: toEmail,
