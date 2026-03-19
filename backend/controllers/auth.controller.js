@@ -1,8 +1,8 @@
 const jwt      = require("jsonwebtoken");
 const User     = require("../models/User");
 const otpStore = require("../models/otpStore");
+const { sendOtpEmail } = require("../utils/mailer");
 
-const VEHICLE_NUMBER_REGEX = /^[A-Z0-9]{4,15}$/;
 const EMAIL_REGEX          = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // ── POST /auth/send-otp ───────────────────────────────────────────────────────
@@ -18,9 +18,12 @@ const sendOtp = async (req, res, next) => {
       return res.status(400).json({ message: "Email is already registered" });
     }
 
-    const otp = "123456"; // demo — replace with nodemailer / SendGrid in production
+    // generate 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     otpStore.set(email.trim(), otp);
-    console.log(`[OTP] ${email}: ${otp}`);
+
+    // send email
+    await sendOtpEmail(email.trim(), otp);
 
     res.json({ message: "OTP sent to your email" });
   } catch (err) {
@@ -47,10 +50,9 @@ const verifyOtp = (req, res, next) => {
   }
 };
 
+// ── POST /auth/register ───────────────────────────────────────────────────────
 const register = async (req, res, next) => {
   try {
-    console.log("REGISTER BODY:", req.body); // add this
-
     const { email, name, vehicleName, vehicleNumber, password } = req.body;
 
     if (!email || !name || !vehicleName || !vehicleNumber || !password) {
@@ -61,9 +63,7 @@ const register = async (req, res, next) => {
     await user.save();
 
     res.status(201).json({ message: "Account created successfully" });
-
   } catch (err) {
-    console.error("REGISTER ERROR:", err); // add this
     next(err);
   }
 };
@@ -86,7 +86,6 @@ const login = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    // Issue JWT
     const token = jwt.sign(
       { userId: user._id },
       process.env.JWT_SECRET,

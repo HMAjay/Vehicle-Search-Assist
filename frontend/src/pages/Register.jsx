@@ -20,7 +20,7 @@ export default function Register() {
     try {
       await api.sendOtp(email.trim());
       setOtpSent(true);
-      setInfo("OTP sent! Check your inbox (demo OTP: 123456).");
+      setInfo("OTP sent! Check your inbox.");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -51,7 +51,7 @@ export default function Register() {
         <h1 className="auth-title">Create account</h1>
         <p className="auth-sub">
           {otpSent
-            ? "Enter the OTP sent to your email."
+            ? `OTP sent to ${email}. Check your inbox.`
             : "We'll verify your email first."}
         </p>
 
@@ -90,10 +90,6 @@ export default function Register() {
 
           {otpSent && (
             <>
-              <div className="otp-hint fade-up">
-                Demo OTP: <span>123456</span>
-              </div>
-
               <div className="field fade-up d2">
                 <label className="label">One-time password</label>
                 <input
