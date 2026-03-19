@@ -1,28 +1,29 @@
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.MAIL_USER,
-    pass: process.env.MAIL_PASS,
-  },
-});
-
 module.exports = async (req, res) => {
-  // only allow POST
+  // always set JSON header first
+  res.setHeader("Content-Type", "application/json");
+
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
 
-  const { to, otp } = req.body;
-
+  const { to, otp } = req.body || {};
   if (!to || !otp) {
     return res.status(400).json({ error: "Missing to or otp" });
   }
 
   try {
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
+      auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS,
+      },
+    });
+
     await transporter.sendMail({
       from: `"VahanConnect" <${process.env.MAIL_USER}>`,
       to,
@@ -41,9 +42,9 @@ module.exports = async (req, res) => {
       `,
     });
 
-    res.status(200).json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (err) {
     console.error("Mail error:", err.message);
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
