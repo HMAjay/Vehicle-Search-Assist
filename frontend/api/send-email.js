@@ -1,7 +1,6 @@
-const nodemailer = require("nodemailer");
+import nodemailer from "nodemailer";
 
-module.exports = async (req, res) => {
-  // always set JSON header first
+export default async function handler(req, res) {
   res.setHeader("Content-Type", "application/json");
 
   if (req.method !== "POST") {
@@ -47,4 +46,4 @@ module.exports = async (req, res) => {
     console.error("Mail error:", err.message);
     return res.status(500).json({ error: err.message });
   }
-};
+}
