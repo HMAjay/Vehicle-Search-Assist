@@ -37,13 +37,13 @@ export default function HomePage() {
         <div className="home-hero-bg" />
         <div className="home-hero-grid" />
         <div className="home-hero-badge fade-up">
-          <span className="home-hero-dot" /> Find. Connect. Solve
+          <span className="home-hero-dot" /> Search. Connect. Solve
         </div>
         <div className="home-hero-logo-wrap fade-up d1">
           <img src="/logo.png" alt="VahanConnect" className="home-hero-logo-img" />
         </div>
         <h1 className="home-hero-title fade-up d2">
-          Find any vehicle owner <span className="home-accent">instantly.</span>
+          Search any vehicle owner <span className="home-accent">instantly.</span>
         </h1>
         <p className="home-hero-sub fade-up d3">
           VahanConnect bridges the gap between a plate number and a person.
