@@ -4,11 +4,11 @@ import { api } from "../utils/api";
 import { setUser, setToken } from "../utils/auth";
 
 export default function Login() {
-  const [email,    setEmail]    = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
-  const [loading,  setLoading]  = useState(false);
-  const [error,    setError]    = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -36,8 +36,16 @@ export default function Login() {
   return (
     <div className="auth-shell">
       <div className="auth-card fade-up">
-        <div className="auth-logo">
-          <img src="/logo.png" alt="logo" style={{ width: 32, height: "auto" }} />
+        <div
+          className="auth-logo"
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
+        >
+          <img
+            src="/logo.png"
+            alt="logo"
+            style={{ width: 32, height: "auto" }}
+          />
           VahanConnect
         </div>
 
@@ -62,8 +70,8 @@ export default function Login() {
               type="email"
               placeholder="you@example.com"
               value={email}
-              onChange={e => setEmail(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleLogin()}
+              onChange={(e) => setEmail(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleLogin()}
               autoFocus
             />
           </div>
@@ -76,20 +84,26 @@ export default function Login() {
                 type={showPass ? "text" : "password"}
                 placeholder="••••••••"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && handleLogin()}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
                 style={{ paddingRight: 52 }}
               />
               <button
                 type="button"
-                onClick={() => setShowPass(p => !p)}
+                onClick={() => setShowPass((p) => !p)}
                 style={{
-                  position: "absolute", right: 12, top: "50%",
+                  position: "absolute",
+                  right: 12,
+                  top: "50%",
                   transform: "translateY(-50%)",
-                  background: "none", border: "none",
-                  cursor: "pointer", color: "var(--text-muted)",
-                  fontSize: "0.78rem", fontFamily: "var(--mono)",
-                  padding: "2px 4px", letterSpacing: "0.04em",
+                  background: "none",
+                  border: "none",
+                  cursor: "pointer",
+                  color: "var(--text-muted)",
+                  fontSize: "0.78rem",
+                  fontFamily: "var(--mono)",
+                  padding: "2px 4px",
+                  letterSpacing: "0.04em",
                 }}
               >
                 {showPass ? "HIDE" : "SHOW"}
@@ -103,9 +117,13 @@ export default function Login() {
             onClick={handleLogin}
             disabled={loading}
           >
-            {loading
-              ? <><span className="spinner" /> Signing in…</>
-              : "Sign in →"}
+            {loading ? (
+              <>
+                <span className="spinner" /> Signing in…
+              </>
+            ) : (
+              "Sign in →"
+            )}
           </button>
         </div>
 

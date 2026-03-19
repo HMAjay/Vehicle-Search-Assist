@@ -221,7 +221,11 @@ export default function HomePage() {
           <img src="/logo.png" alt="logo" className="home-footer-logo" />
           VahanConnect
         </div>
-        <span className="home-footer-copy">
+        <span
+          className="home-footer-copy"
+          onClick={() => navigate("/")}
+          style={{ cursor: "pointer" }}
+        >
           © 2026 VahanConnect. Built by Ajay.
         </span>
         <div className="home-footer-links">
