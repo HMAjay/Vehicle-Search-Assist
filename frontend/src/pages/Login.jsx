@@ -43,7 +43,7 @@ export default function Login() {
 
         {justRegistered && (
           <div className="ok-msg fade-up" style={{ marginBottom: 20 }}>
-            🎉 Account created! Sign in to continue.
+            Account created! Sign in to continue.
           </div>
         )}
 

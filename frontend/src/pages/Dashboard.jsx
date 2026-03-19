@@ -219,7 +219,7 @@ export default function Dashboard() {
         )}
 
         <p className="dash-greeting fade-up">
-          Hello, {user?.name?.split(" ")[0]}
+          Hello, {user?.name}
         </p>
         <h1 className="dash-title fade-up d1">
           Find any <span>vehicle</span>
