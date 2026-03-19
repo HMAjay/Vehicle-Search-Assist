@@ -280,6 +280,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   position: sticky;
   top: 0;
   z-index: 100;
+  overflow: visible;
 }
 .topnav-brand {
   font-family: var(--mono);
@@ -1009,4 +1010,230 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   height: auto;
   display: block;
   filter: brightness(0) saturate(100%) invert(72%) sepia(50%) saturate(800%) hue-rotate(5deg) brightness(105%);
+}
+/* ── Add these blocks to index.css ──────────────────────────────────── */
+
+/* ── Dashboard hero layout ────────────────────────────────────────── */
+.dash-hero {
+  margin-top: 40px;
+  display: flex;
+  gap: 20px;
+  align-items: stretch;
+}
+.dash-hero-car  { flex: 1; min-width: 0; height: 340px; }
+.dash-hero-chat { width: 210px; flex-shrink: 0; height: 340px; }
+
+@media (max-width: 600px) {
+  .dash-hero {
+    flex-direction: column;
+  }
+  .dash-hero-car  { width: 100%; height: 160px; }
+  .dash-hero-chat { width: 100%; height: auto; }
+}
+
+/* ── Sign-out modal ───────────────────────────────────────────────── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px; backdrop-filter: blur(4px);
+}
+.modal-box {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-lit);
+  border-radius: var(--radius-xl);
+  padding: 32px 28px;
+  width: 100%; max-width: 360px;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.5);
+}
+.modal-eyebrow {
+  font-family: var(--mono); font-size: 0.68rem;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--amber); margin-bottom: 12px;
+}
+.modal-title  { font-size: 1.1rem; font-weight: 600; color: var(--text-bright); margin-bottom: 8px; }
+.modal-sub    { font-size: 0.875rem; color: var(--text-mid); margin-bottom: 28px; }
+.modal-actions { display: flex; gap: 10px; }
+
+/* ── Profile avatar & dropdown ────────────────────────────────────── */
+.profile-avatar {
+  width: 32px; height: 32px;
+  background: var(--amber-glow);
+  border: 1px solid rgba(245,166,35,0.35);
+  border-radius: 50%;
+  display: grid; place-items: center;
+  font-family: var(--mono); font-size: 0.7rem; font-weight: 700;
+  color: var(--amber); cursor: pointer;
+}
+.profile-dropdown {
+  position: absolute; top: 40px; right: 0; z-index: 100;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-lit);
+  border-radius: var(--radius-xl);
+  padding: 20px; width: 220px;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+  display: flex; flex-direction: column; gap: 14px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.profile-anchor {
+  position: relative;
+  isolation: auto; /* prevents stacking context issues */
+}
+/* ── Car animation ────────────────────────────────────────────────── */
+.car-anim-wrap {
+  background: var(--bg-void);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  overflow: hidden; position: relative;
+  height: 100%;
+}
+.car-body-anim {
+  animation: driveIn 1.2s cubic-bezier(0.22,1,0.36,1) 0.3s both,
+             idleBob 2.4s ease-in-out 1.6s infinite;
+  transform-origin: center bottom;
+}
+@keyframes driveIn {
+  from { transform: translateX(-380px); opacity: 0; }
+  to   { transform: translateX(0);      opacity: 1; }
+}
+@keyframes idleBob {
+  0%,100% { transform: translateY(0);    }
+  50%     { transform: translateY(-3px); }
+}
+.wheel-anim {
+  animation: wheelSpin 0.35s linear 0.3s 4;
+  transform-box: fill-box; transform-origin: center;
+}
+@keyframes wheelSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.glass-hover-anim {
+  animation: glassSweep 0.9s cubic-bezier(0.22,1,0.36,1) 1.8s both,
+             glassHover 3s ease-in-out 2.8s infinite;
+  transform-origin: 72% 38%;
+}
+@keyframes glassSweep {
+  from { transform: translate(60px,-50px) scale(0.6); opacity: 0; }
+  to   { transform: translate(0,0) scale(1);          opacity: 1; }
+}
+@keyframes glassHover {
+  0%,100% { transform: translate(0,0) rotate(0deg);    }
+  30%     { transform: translate(-5px,4px) rotate(-3deg); }
+  70%     { transform: translate(4px,-4px) rotate(2deg);  }
+}
+.scan-a { animation: scanPulse 1.4s ease-in-out 2.8s infinite; }
+.scan-b { animation: scanPulse 1.4s ease-in-out 3.0s infinite; }
+.scan-c { animation: scanPulse 1.4s ease-in-out 3.2s infinite; }
+@keyframes scanPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+.ping-a { animation: pingOut 2s ease-out 2.8s infinite; transform-box: fill-box; transform-origin: center; }
+.ping-b { animation: pingOut 2s ease-out 3.5s infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pingOut { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.7); opacity: 0; } }
+.found-anim { animation: foundPop 0.5s cubic-bezier(0.22,1,0.36,1) 3s both; }
+@keyframes foundPop {
+  from { opacity: 0; transform: translateY(6px) scale(0.9); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);   }
+}
+.tree-l  { animation: treeSway 4.0s ease-in-out 0.5s infinite; transform-origin: 50% 100%; }
+.tree-r  { animation: treeSway 4.5s ease-in-out 1.0s infinite; transform-origin: 50% 100%; }
+.tree-sm { animation: treeSway 3.8s ease-in-out 0.2s infinite; transform-origin: 50% 100%; }
+@keyframes treeSway {
+  0%,100% { transform: rotate(0deg);    }
+  30%     { transform: rotate(1.5deg);  }
+  70%     { transform: rotate(-1.2deg); }
+}
+
+/* ── Chat animation ───────────────────────────────────────────────── */
+.chat-anim-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-lit);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  animation: floatPhone 4s ease-in-out infinite;
+  height: 100%;
+  display: flex; flex-direction: column;
+}
+@keyframes floatPhone {
+  0%,100% { transform: translateY(0px);  }
+  50%     { transform: translateY(-7px); }
+}
+@keyframes dotBounce {
+  0%,60%,100% { transform: translateY(0);    }
+  30%         { transform: translateY(-5px); }
+}
+.chat-anim-header {
+  background: var(--amber);
+  padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  flex-shrink: 0;
+}
+.chat-anim-avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: rgba(0,0,0,0.15);
+  display: grid; place-items: center;
+  font-size: 0.7rem; font-weight: 700;
+  color: #0d0d0d; font-family: var(--mono);
+  flex-shrink: 0;
+}
+.chat-anim-name   { font-size: 0.82rem; font-weight: 700; color: #0d0d0d; margin: 0; }
+.chat-anim-status {
+  font-size: 0.65rem; color: rgba(0,0,0,0.55); margin: 0;
+  display: flex; align-items: center; gap: 4px;
+}
+.chat-anim-online-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: #065f46; display: inline-block;
+}
+.chat-anim-messages {
+  padding: 12px 10px; flex: 1;
+  display: flex; flex-direction: column; gap: 7px;
+  overflow: hidden;
+}
+.chat-anim-bubble-wrap       { display: flex; }
+.chat-anim-bubble-wrap.me    { justify-content: flex-end; }
+.chat-anim-bubble {
+  max-width: 88%; padding: 8px 11px;
+}
+.chat-anim-bubble.me {
+  background: var(--amber); color: #0d0d0d;
+  border-radius: 12px 2px 12px 12px;
+}
+.chat-anim-bubble.them {
+  background: var(--bg-raised); color: var(--text-bright);
+  border: 1px solid var(--border);
+  border-radius: 2px 12px 12px 12px;
+}
+.chat-anim-text {
+  font-size: 0.75rem; margin: 0;
+}
+.chat-anim-bubble.me   .chat-anim-text { font-weight: 500; }
+.chat-anim-time {
+  font-size: 0.6rem; margin: 3px 0 0;
+  text-align: right; font-family: var(--mono);
+}
+.chat-anim-bubble.me   .chat-anim-time { color: rgba(0,0,0,0.45); }
+.chat-anim-bubble.them .chat-anim-time { color: var(--text-muted); }
+.chat-anim-typing {
+  align-self: flex-start;
+  background: var(--bg-raised); border: 1px solid var(--border);
+  border-radius: 2px 12px 12px 12px;
+  padding: 10px 14px;
+  display: flex; gap: 5px; align-items: center;
+}
+.chat-anim-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--text-muted); display: inline-block;
+  animation-duration: 1s; animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+}
+.chat-anim-inputbar {
+  margin: 0 10px 10px;
+  background: var(--bg-raised); border: 1px solid var(--border);
+  border-radius: 999px; padding: 8px 8px 8px 14px;
+  display: flex; justify-content: space-between; align-items: center;
+  flex-shrink: 0;
+}
+.chat-anim-placeholder { font-size: 0.72rem; color: var(--text-muted); }
+.chat-anim-send-btn {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: var(--amber);
+  display: grid; place-items: center; flex-shrink: 0;
 }
