@@ -31,25 +31,64 @@ export default function Chat() {
   const inputRef        = useRef(null);
   const shouldScrollRef = useRef(true);
   const prevLengthRef   = useRef(0);
+  // keep a stable ref to sending so the interval never captures stale state
+  const sendingRef      = useRef(false);
 
   const scrollToBottom = (behavior = "smooth") =>
     bottomRef.current?.scrollIntoView({ behavior });
+
+  // resolve name from multiple sources
+  const resolveName = useCallback((msgs) => {
+    // 1. already resolved
+    if (otherName && otherName !== "…") return;
+
+    // 2. from vehicleData in localStorage
+    const vd = JSON.parse(localStorage.getItem("vehicleData") || "null");
+    if (vd?.ownerId === userId && vd?.ownerName) {
+      setOtherName(vd.ownerName);
+      return;
+    }
+
+    // 3. from inbox state passed via navigate
+    // (set this in Inbox.jsx: navigate(`/chat/${id}`, { state: { name } }))
+
+    // 4. derive from messages — find first message from the other person
+    const fromOther = msgs.find(
+      (m) => (m.sender?._id ?? m.sender) !== me._id
+    );
+    if (fromOther?.senderName) {
+      setOtherName(fromOther.senderName);
+      return;
+    }
+    if (fromOther?.sender?.name) {
+      setOtherName(fromOther.sender.name);
+    }
+  }, [userId, me._id, otherName]);
 
   const loadMessages = useCallback(async () => {
     try {
       const data = await api.getConversation(userId, me._id);
       setMessages(data);
+      resolveName(data);
     } catch (err) {
       console.error(err);
     }
-  }, [userId, me._id]);
+  }, [userId, me._id, resolveName]);
 
+  // initial load
   useEffect(() => {
+    // try localStorage immediately so name appears before messages load
     const vd = JSON.parse(localStorage.getItem("vehicleData") || "null");
-    if (vd?.ownerId === userId) setOtherName(vd.ownerName);
+    if (vd?.ownerId === userId && vd?.ownerName) setOtherName(vd.ownerName);
+
+    // also check navigate state (from Inbox)
+    const navState = window.history.state?.usr;
+    if (navState?.name) setOtherName(navState.name);
+
     loadMessages();
   }, [loadMessages, userId]);
 
+  // poll — does NOT trigger scroll
   useEffect(() => {
     const id = setInterval(() => {
       shouldScrollRef.current = false;
@@ -58,11 +97,12 @@ export default function Chat() {
     return () => clearInterval(id);
   }, [loadMessages]);
 
+  // scroll only on new messages we care about
   useEffect(() => {
     if (messages.length === 0) return;
-    const isNewMessage = messages.length > prevLengthRef.current;
+    const isNew = messages.length > prevLengthRef.current;
     prevLengthRef.current = messages.length;
-    if (shouldScrollRef.current && isNewMessage) {
+    if (shouldScrollRef.current && isNew) {
       scrollToBottom(prevLengthRef.current <= 1 ? "instant" : "smooth");
     }
     shouldScrollRef.current = false;
@@ -70,10 +110,19 @@ export default function Chat() {
 
   const sendMessage = async () => {
     const trimmed = text.trim();
-    if (!trimmed || sending) return;
+    if (!trimmed || sendingRef.current) return;
 
-    shouldScrollRef.current = true;
+    sendingRef.current = true;
     setSending(true);
+    shouldScrollRef.current = true;
+
+    // clear text and keep focus BEFORE any async work
+    // this prevents the re-render from blurring the input
+    setText("");
+    // schedule focus on next frame so the input re-renders first
+    requestAnimationFrame(() => {
+      inputRef.current?.focus({ preventScroll: true });
+    });
 
     const optimistic = {
       _id: `tmp-${Date.now()}`,
@@ -82,21 +131,21 @@ export default function Chat() {
       text: trimmed,
       createdAt: new Date().toISOString(),
     };
-
     setMessages((prev) => [...prev, optimistic]);
-    setText("");
 
     try {
       await api.sendMessage(me._id, userId, trimmed);
     } catch (err) {
       console.error(err);
     } finally {
+      sendingRef.current = false;
       setSending(false);
-      inputRef.current?.focus({ preventScroll: true });
     }
   };
 
-  const initials = otherName.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
+  const initials = otherName !== "…"
+    ? otherName.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()
+    : "?";
 
   return (
     <div className="chat-shell">
@@ -108,7 +157,7 @@ export default function Chat() {
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
-        <div className="chat-avatar">{initials || "?"}</div>
+        <div className="chat-avatar">{initials}</div>
         <p className="chat-name">{otherName}</p>
       </div>
 
@@ -122,7 +171,7 @@ export default function Chat() {
         )}
 
         {messages.map((msg, i) => {
-          const isMe     = msg.sender === me._id || msg.sender?._id === me._id;
+          const isMe = (msg.sender?._id ?? msg.sender) === me._id;
           const showDate = i === 0 ||
             new Date(msg.createdAt).toDateString() !== new Date(messages[i - 1].createdAt).toDateString();
 
@@ -130,9 +179,7 @@ export default function Chat() {
             <div key={msg._id}>
               {showDate && (
                 <div className="chat-date-divider">
-                  <span className="chat-date-label">
-                    {formatDateLabel(msg.createdAt)}
-                  </span>
+                  <span className="chat-date-label">{formatDateLabel(msg.createdAt)}</span>
                 </div>
               )}
               <div className={`chat-bubble-wrap ${isMe ? "me" : ""}`}>
