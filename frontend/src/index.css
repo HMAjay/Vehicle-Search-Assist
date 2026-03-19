@@ -456,7 +456,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   max-width: 480px;      /* or whatever width you want */
   width: 100%;
   margin: 0 auto;  
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   background: var(--bg-void);
