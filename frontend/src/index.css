@@ -452,14 +452,15 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
 }
 
 /* ── Chat ─────────────────────────────────────────────────────────── */
+/* in index.css, update .chat-shell */
 .chat-shell {
-  max-width: 480px;      /* or whatever width you want */
-  width: 100%;
-  margin: 0 auto;  
-  height: 100dvh;
+  height: 100dvh;          /* shrinks when keyboard opens */
   display: flex;
   flex-direction: column;
   background: var(--bg-void);
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
 }
 .chat-header {
   height: 56px;
@@ -492,6 +493,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   display: flex;
   flex-direction: column;
   gap: 8px;
+  min-height: 0;  /* ← add this, critical for flex shrink to work */
 }
 .chat-bubble-wrap { display: flex; }
 .chat-bubble-wrap.me { justify-content: flex-end; }
@@ -521,13 +523,13 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   font-family: var(--mono);
 }
 .chat-input-bar {
+  flex-shrink: 0;  /* ← add this */
   padding: 12px 16px;
   border-top: 1px solid var(--border);
   background: var(--bg-surface);
   display: flex;
   gap: 8px;
   align-items: center;
-  flex-shrink: 0;
 }
 .chat-input {
   flex: 1;
