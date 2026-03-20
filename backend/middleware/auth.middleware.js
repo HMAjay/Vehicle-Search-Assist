@@ -14,9 +14,10 @@ const protect = (req, res, next) => {
     req.userId = decoded.userId;
     next();
   } catch (err) {
-    const msg = err.name === "TokenExpiredError"
-      ? "Session expired — please log in again"
-      : "Invalid token";
+    const msg =
+      err.name === "TokenExpiredError"
+        ? "Session expired — please log in again"
+        : "Invalid token";
     return res.status(401).json({ message: msg });
   }
 };

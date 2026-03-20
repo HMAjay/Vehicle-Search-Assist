@@ -23,7 +23,7 @@ const messageSchema = new mongoose.Schema(
       default: false,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Index for fast conversation queries

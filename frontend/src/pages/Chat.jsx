@@ -10,11 +10,18 @@ function formatDateLabel(dateStr) {
   yesterday.setDate(today.getDate() - 1);
   if (msgDate.toDateString() === today.toDateString()) return "Today";
   if (msgDate.toDateString() === yesterday.toDateString()) return "Yesterday";
-  return msgDate.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
+  return msgDate.toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function formatTime(dateStr) {
-  return new Date(dateStr).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" });
+  return new Date(dateStr).toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 export default function Chat() {
@@ -22,48 +29,51 @@ export default function Chat() {
   const navigate = useNavigate();
   const me = getUser();
 
-  const [messages, setMessages]   = useState([]);
-  const [text, setText]           = useState("");
-  const [sending, setSending]     = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
   const [otherName, setOtherName] = useState("…");
 
-  const bottomRef       = useRef(null);
-  const inputRef        = useRef(null);
+  const bottomRef = useRef(null);
+  const inputRef = useRef(null);
   const shouldScrollRef = useRef(true);
-  const prevLengthRef   = useRef(0);
+  const prevLengthRef = useRef(0);
   // keep a stable ref to sending so the interval never captures stale state
-  const sendingRef      = useRef(false);
+  const sendingRef = useRef(false);
 
   const scrollToBottom = (behavior = "smooth") =>
     bottomRef.current?.scrollIntoView({ behavior });
 
   // resolve name from multiple sources
-  const resolveName = useCallback((msgs) => {
-    // 1. already resolved
-    if (otherName && otherName !== "…") return;
+  const resolveName = useCallback(
+    (msgs) => {
+      // 1. already resolved
+      if (otherName && otherName !== "…") return;
 
-    // 2. from vehicleData in localStorage
-    const vd = JSON.parse(localStorage.getItem("vehicleData") || "null");
-    if (vd?.ownerId === userId && vd?.ownerName) {
-      setOtherName(vd.ownerName);
-      return;
-    }
+      // 2. from vehicleData in localStorage
+      const vd = JSON.parse(localStorage.getItem("vehicleData") || "null");
+      if (vd?.ownerId === userId && vd?.ownerName) {
+        setOtherName(vd.ownerName);
+        return;
+      }
 
-    // 3. from inbox state passed via navigate
-    // (set this in Inbox.jsx: navigate(`/chat/${id}`, { state: { name } }))
+      // 3. from inbox state passed via navigate
+      // (set this in Inbox.jsx: navigate(`/chat/${id}`, { state: { name } }))
 
-    // 4. derive from messages — find first message from the other person
-    const fromOther = msgs.find(
-      (m) => (m.sender?._id ?? m.sender) !== me._id
-    );
-    if (fromOther?.senderName) {
-      setOtherName(fromOther.senderName);
-      return;
-    }
-    if (fromOther?.sender?.name) {
-      setOtherName(fromOther.sender.name);
-    }
-  }, [userId, me._id, otherName]);
+      // 4. derive from messages — find first message from the other person
+      const fromOther = msgs.find(
+        (m) => (m.sender?._id ?? m.sender) !== me._id,
+      );
+      if (fromOther?.senderName) {
+        setOtherName(fromOther.senderName);
+        return;
+      }
+      if (fromOther?.sender?.name) {
+        setOtherName(fromOther.sender.name);
+      }
+    },
+    [userId, me._id, otherName],
+  );
 
   const loadMessages = useCallback(async () => {
     try {
@@ -143,17 +153,32 @@ export default function Chat() {
     }
   };
 
-  const initials = otherName !== "…"
-    ? otherName.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase()
-    : "?";
+  const initials =
+    otherName !== "…"
+      ? otherName
+          .split(" ")
+          .map((w) => w[0])
+          .slice(0, 2)
+          .join("")
+          .toUpperCase()
+      : "?";
 
   return (
     <div className="chat-shell">
-
       {/* Header */}
       <div className="chat-header">
-        <button className="btn btn-ghost chat-back-btn" onClick={() => navigate(-1)}>
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+        <button
+          className="btn btn-ghost chat-back-btn"
+          onClick={() => navigate(-1)}
+        >
+          <svg
+            width="16"
+            height="16"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2.5"
+          >
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
@@ -172,20 +197,26 @@ export default function Chat() {
 
         {messages.map((msg, i) => {
           const isMe = (msg.sender?._id ?? msg.sender) === me._id;
-          const showDate = i === 0 ||
-            new Date(msg.createdAt).toDateString() !== new Date(messages[i - 1].createdAt).toDateString();
+          const showDate =
+            i === 0 ||
+            new Date(msg.createdAt).toDateString() !==
+              new Date(messages[i - 1].createdAt).toDateString();
 
           return (
             <div key={msg._id}>
               {showDate && (
                 <div className="chat-date-divider">
-                  <span className="chat-date-label">{formatDateLabel(msg.createdAt)}</span>
+                  <span className="chat-date-label">
+                    {formatDateLabel(msg.createdAt)}
+                  </span>
                 </div>
               )}
               <div className={`chat-bubble-wrap ${isMe ? "me" : ""}`}>
                 <div className={`chat-bubble ${isMe ? "me" : "them"}`}>
                   <span className="chat-bubble-text">{msg.text}</span>
-                  <span className="chat-bubble-time">{formatTime(msg.createdAt)}</span>
+                  <span className="chat-bubble-time">
+                    {formatTime(msg.createdAt)}
+                  </span>
                 </div>
               </div>
             </div>
@@ -206,18 +237,28 @@ export default function Chat() {
           onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && sendMessage()}
           autoFocus
         />
-        <button className="chat-send" onClick={sendMessage} disabled={!text.trim() || sending}>
+        <button
+          className="chat-send"
+          onClick={sendMessage}
+          disabled={!text.trim() || sending}
+        >
           {sending ? (
             <span className="spinner chat-spinner" />
           ) : (
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
               <line x1="22" y1="2" x2="11" y2="13" />
               <polygon points="22 2 15 22 11 13 2 9 22 2" />
             </svg>
           )}
         </button>
       </div>
-
     </div>
   );
 }

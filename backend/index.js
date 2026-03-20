@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
 
-const authRoutes    = require("./routes/auth.routes");
+const authRoutes = require("./routes/auth.routes");
 const vehicleRoutes = require("./routes/vehicle.routes");
 const messageRoutes = require("./routes/message.routes");
 const { errorHandler } = require("./middleware/error.middleware");
@@ -12,11 +12,13 @@ const app = express();
 app.set("trust proxy", 1);
 
 // ── CORS ─────────────────────────────────────────────────────────────────────
-app.use(cors({
-  origin: process.env.ALLOWED_ORIGIN || "http://localhost:5173",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(
+  cors({
+    origin: process.env.ALLOWED_ORIGIN || "http://localhost:5173",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  }),
+);
 
 // ── Body parser ───────────────────────────────────────────────────────────────
 app.use(express.json({ limit: "10kb" })); // reject huge payloads
@@ -28,12 +30,12 @@ mongoose
   .catch((err) => console.error("❌ MongoDB error:", err));
 
 // ── Routes ────────────────────────────────────────────────────────────────────
-app.use("/auth",     authRoutes);
+app.use("/auth", authRoutes);
 app.use("/vehicles", vehicleRoutes);
 app.use("/messages", messageRoutes);
 
 app.get("/", (_req, res) =>
-  res.json({ status: "ok", message: "Vehicle Assist API running" })
+  res.json({ status: "ok", message: "Vehicle Assist API running" }),
 );
 
 // ── Global error handler ──────────────────────────────────────────────────────

@@ -1,9 +1,9 @@
-const jwt      = require("jsonwebtoken");
-const User     = require("../models/User");
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
 const otpStore = require("../models/otpStore");
 const { sendOtpEmail } = require("../utils/mailer");
 
-const EMAIL_REGEX          = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 // ── POST /auth/send-otp ───────────────────────────────────────────────────────
 const sendOtp = async (req, res, next) => {
@@ -59,7 +59,13 @@ const register = async (req, res, next) => {
       return res.status(400).json({ message: "All fields are required" });
     }
 
-    const user = new User({ email, name, vehicleName, vehicleNumber, password });
+    const user = new User({
+      email,
+      name,
+      vehicleName,
+      vehicleNumber,
+      password,
+    });
     await user.save();
 
     res.status(201).json({ message: "Account created successfully" });
@@ -73,7 +79,9 @@ const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
@@ -86,11 +94,9 @@ const login = async (req, res, next) => {
       return res.status(401).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign(
-      { userId: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
     res.json({
       message: "Login successful",

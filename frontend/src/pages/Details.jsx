@@ -2,7 +2,14 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../utils/api";
 
-function PasswordInput({ value, onChange, show, onToggle, placeholder, onKeyDown }) {
+function PasswordInput({
+  value,
+  onChange,
+  show,
+  onToggle,
+  placeholder,
+  onKeyDown,
+}) {
   return (
     <div style={{ position: "relative" }}>
       <input
@@ -18,12 +25,18 @@ function PasswordInput({ value, onChange, show, onToggle, placeholder, onKeyDown
         type="button"
         onClick={onToggle}
         style={{
-          position: "absolute", right: 12, top: "50%",
+          position: "absolute",
+          right: 12,
+          top: "50%",
           transform: "translateY(-50%)",
-          background: "none", border: "none",
-          cursor: "pointer", color: "var(--text-muted)",
-          fontSize: "0.78rem", fontFamily: "var(--mono)",
-          padding: "2px 4px", letterSpacing: "0.04em",
+          background: "none",
+          border: "none",
+          cursor: "pointer",
+          color: "var(--text-muted)",
+          fontSize: "0.78rem",
+          fontFamily: "var(--mono)",
+          padding: "2px 4px",
+          letterSpacing: "0.04em",
         }}
       >
         {show ? "HIDE" : "SHOW"}
@@ -33,15 +46,15 @@ function PasswordInput({ value, onChange, show, onToggle, placeholder, onKeyDown
 }
 
 export default function Details() {
-  const [name,          setName]          = useState("");
-  const [vehicleName,   setVehicleName]   = useState("");
+  const [name, setName] = useState("");
+  const [vehicleName, setVehicleName] = useState("");
   const [vehicleNumber, setVehicleNumber] = useState("");
-  const [password,      setPassword]      = useState("");
-  const [confirm,       setConfirm]       = useState("");
-  const [showPass,      setShowPass]      = useState(false);
-  const [showConfirm,   setShowConfirm]   = useState(false);
-  const [loading,       setLoading]       = useState(false);
-  const [error,         setError]         = useState("");
+  const [password, setPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const email = localStorage.getItem("verifiedEmail");
@@ -86,7 +99,13 @@ export default function Details() {
         <h1 className="auth-title">Almost there</h1>
         <p className="auth-sub">
           Registering{" "}
-          <span style={{ color: "var(--amber)", fontFamily: "var(--mono)", fontSize: "0.85em" }}>
+          <span
+            style={{
+              color: "var(--amber)",
+              fontFamily: "var(--mono)",
+              fontSize: "0.85em",
+            }}
+          >
             {email}
           </span>
         </p>
@@ -100,19 +119,21 @@ export default function Details() {
               className="input"
               placeholder="John Doe"
               value={name}
-              onChange={e => setName(e.target.value)}
+              onChange={(e) => setName(e.target.value)}
               autoFocus
             />
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+          <div
+            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
+          >
             <div className="field fade-up d2">
               <label className="label">Vehicle name</label>
               <input
                 className="input"
                 placeholder="Honda Civic"
                 value={vehicleName}
-                onChange={e => setVehicleName(e.target.value)}
+                onChange={(e) => setVehicleName(e.target.value)}
               />
             </div>
             <div className="field fade-up d2">
@@ -121,7 +142,7 @@ export default function Details() {
                 className="input"
                 placeholder="MH12AB1234"
                 value={vehicleNumber}
-                onChange={e => setVehicleNumber(e.target.value.toUpperCase())}
+                onChange={(e) => setVehicleNumber(e.target.value.toUpperCase())}
                 style={{ fontFamily: "var(--mono)", letterSpacing: "0.08em" }}
               />
             </div>
@@ -131,9 +152,9 @@ export default function Details() {
             <label className="label">Password</label>
             <PasswordInput
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               show={showPass}
-              onToggle={() => setShowPass(p => !p)}
+              onToggle={() => setShowPass((p) => !p)}
               placeholder="Min. 6 characters"
             />
           </div>
@@ -142,11 +163,11 @@ export default function Details() {
             <label className="label">Confirm password</label>
             <PasswordInput
               value={confirm}
-              onChange={e => setConfirm(e.target.value)}
+              onChange={(e) => setConfirm(e.target.value)}
               show={showConfirm}
-              onToggle={() => setShowConfirm(p => !p)}
+              onToggle={() => setShowConfirm((p) => !p)}
               placeholder="Repeat password"
-              onKeyDown={e => e.key === "Enter" && createAccount()}
+              onKeyDown={(e) => e.key === "Enter" && createAccount()}
             />
           </div>
 
@@ -156,9 +177,13 @@ export default function Details() {
             onClick={createAccount}
             disabled={loading}
           >
-            {loading
-              ? <><span className="spinner" /> Creating account…</>
-              : "Create account →"}
+            {loading ? (
+              <>
+                <span className="spinner" /> Creating account…
+              </>
+            ) : (
+              "Create account →"
+            )}
           </button>
         </div>
       </div>

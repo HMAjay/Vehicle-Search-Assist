@@ -218,9 +218,7 @@ export default function Dashboard() {
           </div>
         )}
 
-        <p className="dash-greeting fade-up">
-          Hello, {user?.name}
-        </p>
+        <p className="dash-greeting fade-up">Hello, {user?.name}</p>
         <h1 className="dash-title fade-up d1">
           Find any <span>vehicle</span>
           <br />

@@ -6,7 +6,9 @@ const sendMessage = async (req, res, next) => {
     const { senderId, receiverId, text } = req.body;
 
     if (!senderId || !receiverId || !text?.trim()) {
-      return res.status(400).json({ message: "senderId, receiverId and text are required" });
+      return res
+        .status(400)
+        .json({ message: "senderId, receiverId and text are required" });
     }
 
     // Prevent messaging yourself
@@ -20,9 +22,9 @@ const sendMessage = async (req, res, next) => {
     }
 
     const message = await Message.create({
-      sender:   senderId,
+      sender: senderId,
       receiver: receiverId,
-      text:     text.trim(),
+      text: text.trim(),
     });
 
     res.status(201).json({ message: "Message sent", data: message });
@@ -44,13 +46,13 @@ const getConversation = async (req, res, next) => {
     // Mark incoming messages as seen
     await Message.updateMany(
       { sender: otherUserId, receiver: myUserId, seen: false },
-      { seen: true }
+      { seen: true },
     );
 
     const messages = await Message.find({
       $or: [
-        { sender: myUserId,    receiver: otherUserId },
-        { sender: otherUserId, receiver: myUserId    },
+        { sender: myUserId, receiver: otherUserId },
+        { sender: otherUserId, receiver: myUserId },
       ],
     }).sort({ createdAt: 1 });
 
@@ -74,7 +76,7 @@ const getInbox = async (req, res, next) => {
       $or: [{ sender: userId }, { receiver: userId }],
     })
       .sort({ createdAt: -1 })
-      .populate("sender",   "name")
+      .populate("sender", "name")
       .populate("receiver", "name");
 
     const conversations = {};
@@ -87,11 +89,11 @@ const getInbox = async (req, res, next) => {
       if (!conversations[otherId]) {
         // First encounter is always the latest message — set it once, never overwrite
         conversations[otherId] = {
-          userId:      otherId,
-          name:        otherUser.name,
+          userId: otherId,
+          name: otherUser.name,
           lastMessage: msg.text,
-          time:        msg.createdAt,
-          hasUnread:   false,
+          time: msg.createdAt,
+          hasUnread: false,
         };
       }
 
@@ -115,7 +117,10 @@ const getUnreadCount = async (req, res, next) => {
       return res.status(403).json({ message: "Forbidden" });
     }
 
-    const count = await Message.countDocuments({ receiver: userId, seen: false });
+    const count = await Message.countDocuments({
+      receiver: userId,
+      seen: false,
+    });
     res.json({ count });
   } catch (err) {
     next(err);

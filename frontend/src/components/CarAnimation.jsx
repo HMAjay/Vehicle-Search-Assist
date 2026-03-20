@@ -1,72 +1,401 @@
 export default function CarAnimation() {
   return (
     <div className="car-anim-wrap">
-      <svg width="100%" viewBox="0 0 640 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg
+        width="100%"
+        viewBox="0 0 640 240"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
         <rect width="640" height="240" fill="#080b10" />
         <rect x="0" y="196" width="640" height="44" fill="#0d1117" />
-        <line x1="0" y1="196" x2="640" y2="196" stroke="#1f2d3d" strokeWidth="1" />
+        <line
+          x1="0"
+          y1="196"
+          x2="640"
+          y2="196"
+          stroke="#1f2d3d"
+          strokeWidth="1"
+        />
         {[30, 100, 170, 240, 310, 380, 450, 520].map((x) => (
-          <rect key={x} x={x} y="208" width="36" height="3" rx="1.5" fill="#1f2d3d" />
+          <rect
+            key={x}
+            x={x}
+            y="208"
+            width="36"
+            height="3"
+            rx="1.5"
+            fill="#1f2d3d"
+          />
         ))}
 
         <g className="tree-l" transform="translate(42,0)">
-          <rect x="18" y="148" width="8" height="48" rx="2" fill="#161d27" stroke="#1f2d3d" strokeWidth="1" />
-          <ellipse cx="22" cy="118" rx="20" ry="32" fill="#111820" stroke="#1f2d3d" strokeWidth="1" />
-          <ellipse cx="22" cy="102" rx="15" ry="24" fill="#161d27" stroke="#1f2d3d" strokeWidth="1" />
+          <rect
+            x="18"
+            y="148"
+            width="8"
+            height="48"
+            rx="2"
+            fill="#161d27"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
+          <ellipse
+            cx="22"
+            cy="118"
+            rx="20"
+            ry="32"
+            fill="#111820"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
+          <ellipse
+            cx="22"
+            cy="102"
+            rx="15"
+            ry="24"
+            fill="#161d27"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
         </g>
         <g className="tree-sm" transform="translate(78,20)">
-          <rect x="10" y="158" width="6" height="38" rx="2" fill="#161d27" stroke="#1f2d3d" strokeWidth="1" />
-          <ellipse cx="13" cy="132" rx="13" ry="26" fill="#111820" stroke="#1f2d3d" strokeWidth="1" />
-          <ellipse cx="13" cy="120" rx="10" ry="18" fill="#161d27" stroke="#1f2d3d" strokeWidth="1" />
+          <rect
+            x="10"
+            y="158"
+            width="6"
+            height="38"
+            rx="2"
+            fill="#161d27"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
+          <ellipse
+            cx="13"
+            cy="132"
+            rx="13"
+            ry="26"
+            fill="#111820"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
+          <ellipse
+            cx="13"
+            cy="120"
+            rx="10"
+            ry="18"
+            fill="#161d27"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
         </g>
         <g className="tree-r" transform="translate(556,0)">
-          <rect x="18" y="148" width="8" height="48" rx="2" fill="#161d27" stroke="#1f2d3d" strokeWidth="1" />
-          <ellipse cx="22" cy="116" rx="22" ry="34" fill="#111820" stroke="#1f2d3d" strokeWidth="1" />
-          <ellipse cx="22" cy="98" rx="16" ry="22" fill="#161d27" stroke="#1f2d3d" strokeWidth="1" />
+          <rect
+            x="18"
+            y="148"
+            width="8"
+            height="48"
+            rx="2"
+            fill="#161d27"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
+          <ellipse
+            cx="22"
+            cy="116"
+            rx="22"
+            ry="34"
+            fill="#111820"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
+          <ellipse
+            cx="22"
+            cy="98"
+            rx="16"
+            ry="22"
+            fill="#161d27"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
         </g>
         <g className="tree-sm" transform="translate(592,18)">
-          <rect x="9" y="158" width="6" height="38" rx="2" fill="#161d27" stroke="#1f2d3d" strokeWidth="1" />
-          <ellipse cx="12" cy="134" rx="12" ry="24" fill="#111820" stroke="#1f2d3d" strokeWidth="1" />
-          <ellipse cx="12" cy="122" rx="9" ry="16" fill="#161d27" stroke="#1f2d3d" strokeWidth="1" />
+          <rect
+            x="9"
+            y="158"
+            width="6"
+            height="38"
+            rx="2"
+            fill="#161d27"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
+          <ellipse
+            cx="12"
+            cy="134"
+            rx="12"
+            ry="24"
+            fill="#111820"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
+          <ellipse
+            cx="12"
+            cy="122"
+            rx="9"
+            ry="16"
+            fill="#161d27"
+            stroke="#1f2d3d"
+            strokeWidth="1"
+          />
         </g>
 
         <g className="car-body-anim">
-          <rect x="100" y="142" width="280" height="54" rx="10" fill="#161d27" stroke="#f5a623" strokeWidth="2" />
-          <path d="M148 142 C162 112 196 98 234 96 C272 96 308 108 326 124 L368 142Z" fill="#161d27" stroke="#f5a623" strokeWidth="2" />
-          <rect x="179" y="110" width="52" height="24" rx="4" fill="#1c2533" stroke="#2a3d54" strokeWidth="1" />
-          <rect x="236" y="110" width="52" height="24" rx="4" fill="#1c2533" stroke="#2a3d54" strokeWidth="1" />
-          <rect x="106" y="158" width="20" height="10" rx="3" fill="#f5a623" opacity="0.9" />
-          <rect x="356" y="158" width="20" height="10" rx="3" fill="#ef4444" opacity="0.7" />
-          <line x1="228" y1="142" x2="228" y2="195" stroke="#2a3d54" strokeWidth="1" />
-          <rect x="202" y="182" width="76" height="14" rx="3" fill="#1c2533" stroke="#2a3d54" strokeWidth="1" />
-          <text x="240" y="193" textAnchor="middle" fontSize="12" fill="#8b97a8" fontFamily="monospace" fontWeight="700">KA01BG0007</text>
+          <rect
+            x="100"
+            y="142"
+            width="280"
+            height="54"
+            rx="10"
+            fill="#161d27"
+            stroke="#f5a623"
+            strokeWidth="2"
+          />
+          <path
+            d="M148 142 C162 112 196 98 234 96 C272 96 308 108 326 124 L368 142Z"
+            fill="#161d27"
+            stroke="#f5a623"
+            strokeWidth="2"
+          />
+          <rect
+            x="179"
+            y="110"
+            width="52"
+            height="24"
+            rx="4"
+            fill="#1c2533"
+            stroke="#2a3d54"
+            strokeWidth="1"
+          />
+          <rect
+            x="236"
+            y="110"
+            width="52"
+            height="24"
+            rx="4"
+            fill="#1c2533"
+            stroke="#2a3d54"
+            strokeWidth="1"
+          />
+          <rect
+            x="106"
+            y="158"
+            width="20"
+            height="10"
+            rx="3"
+            fill="#f5a623"
+            opacity="0.9"
+          />
+          <rect
+            x="356"
+            y="158"
+            width="20"
+            height="10"
+            rx="3"
+            fill="#ef4444"
+            opacity="0.7"
+          />
+          <line
+            x1="228"
+            y1="142"
+            x2="228"
+            y2="195"
+            stroke="#2a3d54"
+            strokeWidth="1"
+          />
+          <rect
+            x="202"
+            y="182"
+            width="76"
+            height="14"
+            rx="3"
+            fill="#1c2533"
+            stroke="#2a3d54"
+            strokeWidth="1"
+          />
+          <text
+            x="240"
+            y="193"
+            textAnchor="middle"
+            fontSize="12"
+            fill="#8b97a8"
+            fontFamily="monospace"
+            fontWeight="700"
+          >
+            KA01BG0007
+          </text>
           <g className="wheel-anim">
-            <circle cx="158" cy="198" r="22" fill="#111820" stroke="#f5a623" strokeWidth="2.5" />
-            <circle cx="158" cy="198" r="9" fill="#161d27" stroke="#2a3d54" strokeWidth="1.5" />
-            <line x1="158" y1="177" x2="158" y2="219" stroke="#2a3d54" strokeWidth="1.5" />
-            <line x1="137" y1="198" x2="179" y2="198" stroke="#2a3d54" strokeWidth="1.5" />
+            <circle
+              cx="158"
+              cy="198"
+              r="22"
+              fill="#111820"
+              stroke="#f5a623"
+              strokeWidth="2.5"
+            />
+            <circle
+              cx="158"
+              cy="198"
+              r="9"
+              fill="#161d27"
+              stroke="#2a3d54"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="158"
+              y1="177"
+              x2="158"
+              y2="219"
+              stroke="#2a3d54"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="137"
+              y1="198"
+              x2="179"
+              y2="198"
+              stroke="#2a3d54"
+              strokeWidth="1.5"
+            />
           </g>
           <g className="wheel-anim">
-            <circle cx="326" cy="198" r="22" fill="#111820" stroke="#f5a623" strokeWidth="2.5" />
-            <circle cx="326" cy="198" r="9" fill="#161d27" stroke="#2a3d54" strokeWidth="1.5" />
-            <line x1="326" y1="177" x2="326" y2="219" stroke="#2a3d54" strokeWidth="1.5" />
-            <line x1="305" y1="198" x2="347" y2="198" stroke="#2a3d54" strokeWidth="1.5" />
+            <circle
+              cx="326"
+              cy="198"
+              r="22"
+              fill="#111820"
+              stroke="#f5a623"
+              strokeWidth="2.5"
+            />
+            <circle
+              cx="326"
+              cy="198"
+              r="9"
+              fill="#161d27"
+              stroke="#2a3d54"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="326"
+              y1="177"
+              x2="326"
+              y2="219"
+              stroke="#2a3d54"
+              strokeWidth="1.5"
+            />
+            <line
+              x1="305"
+              y1="198"
+              x2="347"
+              y2="198"
+              stroke="#2a3d54"
+              strokeWidth="1.5"
+            />
           </g>
         </g>
 
         <g className="glass-hover-anim">
-          <circle className="ping-a" cx="466" cy="108" r="54" stroke="#f5a623" strokeWidth="1.5" fill="none" />
-          <circle className="ping-b" cx="466" cy="108" r="54" stroke="#f5a623" strokeWidth="1" fill="none" />
-          <circle cx="466" cy="108" r="54" fill="#161d27" fillOpacity="0.92" stroke="#f5a623" strokeWidth="3" />
-          <line className="scan-a" x1="424" y1="92" x2="506" y2="92" stroke="#f5a623" strokeWidth="3" strokeLinecap="round" />
-          <line className="scan-b" x1="418" y1="108" x2="512" y2="108" stroke="#f5a623" strokeWidth="3" strokeLinecap="round" />
-          <line className="scan-c" x1="424" y1="124" x2="506" y2="124" stroke="#f5a623" strokeWidth="3" strokeLinecap="round" />
-          <line x1="506" y1="150" x2="540" y2="184" stroke="#f5a623" strokeWidth="6" strokeLinecap="round" />
+          <circle
+            className="ping-a"
+            cx="466"
+            cy="108"
+            r="54"
+            stroke="#f5a623"
+            strokeWidth="1.5"
+            fill="none"
+          />
+          <circle
+            className="ping-b"
+            cx="466"
+            cy="108"
+            r="54"
+            stroke="#f5a623"
+            strokeWidth="1"
+            fill="none"
+          />
+          <circle
+            cx="466"
+            cy="108"
+            r="54"
+            fill="#161d27"
+            fillOpacity="0.92"
+            stroke="#f5a623"
+            strokeWidth="3"
+          />
+          <line
+            className="scan-a"
+            x1="424"
+            y1="92"
+            x2="506"
+            y2="92"
+            stroke="#f5a623"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <line
+            className="scan-b"
+            x1="418"
+            y1="108"
+            x2="512"
+            y2="108"
+            stroke="#f5a623"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <line
+            className="scan-c"
+            x1="424"
+            y1="124"
+            x2="506"
+            y2="124"
+            stroke="#f5a623"
+            strokeWidth="3"
+            strokeLinecap="round"
+          />
+          <line
+            x1="506"
+            y1="150"
+            x2="540"
+            y2="184"
+            stroke="#f5a623"
+            strokeWidth="6"
+            strokeLinecap="round"
+          />
         </g>
 
         <g className="found-anim">
-          <rect x="414" y="174" width="66" height="22" rx="11" fill="#111820" stroke="#22c55e" strokeWidth="1.5" />
-          <text x="447" y="189" textAnchor="middle" fontSize="9" fill="#22c55e" fontFamily="monospace" fontWeight="700" letterSpacing="0.08em">FOUND</text>
+          <rect
+            x="414"
+            y="174"
+            width="66"
+            height="22"
+            rx="11"
+            fill="#111820"
+            stroke="#22c55e"
+            strokeWidth="1.5"
+          />
+          <text
+            x="447"
+            y="189"
+            textAnchor="middle"
+            fontSize="9"
+            fill="#22c55e"
+            fontFamily="monospace"
+            fontWeight="700"
+            letterSpacing="0.08em"
+          >
+            FOUND
+          </text>
         </g>
       </svg>
     </div>

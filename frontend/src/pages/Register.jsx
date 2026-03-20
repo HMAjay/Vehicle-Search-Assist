@@ -3,19 +3,25 @@ import { useNavigate, Link } from "react-router-dom";
 import { api } from "../utils/api";
 
 export default function Register() {
-  const [email,   setEmail]   = useState("");
-  const [otp,     setOtp]     = useState("");
+  const [email, setEmail] = useState("");
+  const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [error,   setError]   = useState("");
-  const [info,    setInfo]    = useState("");
+  const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const navigate = useNavigate();
 
-  useEffect(() => { localStorage.removeItem("verifiedEmail"); }, []);
+  useEffect(() => {
+    localStorage.removeItem("verifiedEmail");
+  }, []);
 
   const sendOtp = async () => {
-    setError(""); setInfo("");
-    if (!email.trim()) { setError("Please enter your email."); return; }
+    setError("");
+    setInfo("");
+    if (!email.trim()) {
+      setError("Please enter your email.");
+      return;
+    }
     setLoading(true);
     try {
       await api.sendOtp(email.trim());
@@ -30,7 +36,10 @@ export default function Register() {
 
   const verifyOtp = async () => {
     setError("");
-    if (!otp.trim()) { setError("Please enter the OTP."); return; }
+    if (!otp.trim()) {
+      setError("Please enter the OTP.");
+      return;
+    }
     setLoading(true);
     try {
       await api.verifyOtp(email.trim(), otp.trim());
@@ -57,7 +66,7 @@ export default function Register() {
 
         <div className="auth-form">
           {error && <div className="err-msg">{error}</div>}
-          {info  && <div className="ok-msg">{info}</div>}
+          {info && <div className="ok-msg">{info}</div>}
 
           <div className="field fade-up d1">
             <label className="label">Email</label>
@@ -67,8 +76,8 @@ export default function Register() {
                 type="email"
                 placeholder="you@example.com"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
-                onKeyDown={e => e.key === "Enter" && !otpSent && sendOtp()}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && !otpSent && sendOtp()}
                 disabled={otpSent}
                 autoFocus
                 style={{ flex: 1 }}
@@ -80,9 +89,11 @@ export default function Register() {
                   disabled={loading}
                   style={{ flexShrink: 0 }}
                 >
-                  {loading
-                    ? <span className="spinner spinner-amber" />
-                    : "Send OTP"}
+                  {loading ? (
+                    <span className="spinner spinner-amber" />
+                  ) : (
+                    "Send OTP"
+                  )}
                 </button>
               )}
             </div>
@@ -96,8 +107,8 @@ export default function Register() {
                   className="input"
                   placeholder="6-digit code"
                   value={otp}
-                  onChange={e => setOtp(e.target.value)}
-                  onKeyDown={e => e.key === "Enter" && verifyOtp()}
+                  onChange={(e) => setOtp(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && verifyOtp()}
                   autoFocus
                   style={{ fontFamily: "var(--mono)", letterSpacing: "0.2em" }}
                 />
@@ -109,9 +120,13 @@ export default function Register() {
                 onClick={verifyOtp}
                 disabled={loading}
               >
-                {loading
-                  ? <><span className="spinner" /> Verifying…</>
-                  : "Verify & continue →"}
+                {loading ? (
+                  <>
+                    <span className="spinner" /> Verifying…
+                  </>
+                ) : (
+                  "Verify & continue →"
+                )}
               </button>
 
               <button

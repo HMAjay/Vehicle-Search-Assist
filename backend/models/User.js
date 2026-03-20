@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt   = require("bcrypt");
+const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema(
   {
@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema(
       minlength: [6, "Password must be at least 6 characters"],
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 // Hash password before saving
@@ -53,12 +53,12 @@ userSchema.methods.comparePassword = function (candidate) {
 // Safe public object — never exposes password
 userSchema.methods.toPublic = function () {
   return {
-    _id:           this._id,
-    email:         this.email,
-    name:          this.name,
-    vehicleName:   this.vehicleName,
+    _id: this._id,
+    email: this.email,
+    name: this.name,
+    vehicleName: this.vehicleName,
     vehicleNumber: this.vehicleNumber,
-    createdAt:     this.createdAt,
+    createdAt: this.createdAt,
   };
 };
 

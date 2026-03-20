@@ -17,17 +17,17 @@ export default function View() {
 
   const isSelf = vehicle.ownerId === me?._id;
 
-  const initials = vehicle.ownerName
-    ?.split(" ")
-    .map(w => w[0])
-    .slice(0, 2)
-    .join("")
-    .toUpperCase() || "?";
+  const initials =
+    vehicle.ownerName
+      ?.split(" ")
+      .map((w) => w[0])
+      .slice(0, 2)
+      .join("")
+      .toUpperCase() || "?";
 
   return (
     <div className="view-shell">
       <div className="view-card fade-up">
-
         {/* Header */}
         <div className="view-header">
           <span className="view-tag">Vehicle found</span>
@@ -60,9 +60,15 @@ export default function View() {
               style={{ flex: 1, padding: "12px" }}
               onClick={() => navigate(`/chat/${vehicle.ownerId}`)}
             >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" strokeWidth="2.2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.2"
+              >
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
               </svg>
               Message owner
             </button>
@@ -76,7 +82,6 @@ export default function View() {
             ← Back
           </button>
         </div>
-
       </div>
     </div>
   );

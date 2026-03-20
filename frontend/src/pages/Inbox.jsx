@@ -5,20 +5,21 @@ import { getUser } from "../utils/auth";
 
 function formatTime(dateStr) {
   if (!dateStr) return "";
-  const d    = new Date(dateStr);
-  const now  = new Date();
+  const d = new Date(dateStr);
+  const now = new Date();
   const diff = now - d;
-  if (diff < 60_000)     return "just now";
-  if (diff < 3_600_000)  return `${Math.floor(diff / 60_000)}m ago`;
-  if (diff < 86_400_000) return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  if (diff < 60_000) return "just now";
+  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
+  if (diff < 86_400_000)
+    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   return d.toLocaleDateString([], { month: "short", day: "numeric" });
 }
 
 export default function Inbox() {
-  const [chats,   setChats]   = useState([]);
+  const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const user     = getUser();
+  const user = getUser();
 
   const fetchInbox = useCallback(async () => {
     try {
@@ -37,7 +38,7 @@ export default function Inbox() {
     return () => clearInterval(id);
   }, [fetchInbox]);
 
-  const unreadTotal = chats.filter(c => c.hasUnread).length;
+  const unreadTotal = chats.filter((c) => c.hasUnread).length;
 
   return (
     <div className="inbox-shell">
@@ -56,7 +57,10 @@ export default function Inbox() {
         <h1 className="inbox-title fade-up">
           Inbox
           {unreadTotal > 0 && (
-            <span className="badge" style={{ marginLeft: 10, position: "relative", top: -2 }}>
+            <span
+              className="badge"
+              style={{ marginLeft: 10, position: "relative", top: -2 }}
+            >
               {unreadTotal}
             </span>
           )}
@@ -70,8 +74,13 @@ export default function Inbox() {
         </p>
 
         {loading && (
-          <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
-            <span className="spinner spinner-amber" style={{ width: 24, height: 24 }} />
+          <div
+            style={{ display: "flex", justifyContent: "center", padding: 40 }}
+          >
+            <span
+              className="spinner spinner-amber"
+              style={{ width: 24, height: 24 }}
+            />
           </div>
         )}
 
@@ -79,18 +88,21 @@ export default function Inbox() {
           <div className="empty-state fade-up">
             <div className="empty-icon">📭</div>
             <p className="empty-text">
-              Search for a vehicle on the dashboard<br />and start a conversation.
+              Search for a vehicle on the dashboard
+              <br />
+              and start a conversation.
             </p>
           </div>
         )}
 
         {chats.map((chat, i) => {
-          const initials = chat.name
-            ?.split(" ")
-            .map(w => w[0])
-            .slice(0, 2)
-            .join("")
-            .toUpperCase() || "?";
+          const initials =
+            chat.name
+              ?.split(" ")
+              .map((w) => w[0])
+              .slice(0, 2)
+              .join("")
+              .toUpperCase() || "?";
 
           return (
             <div
@@ -103,7 +115,9 @@ export default function Inbox() {
 
               <div className="convo-info">
                 <p className="convo-name">{chat.name}</p>
-                <p className="convo-last">{chat.lastMessage || "No messages yet"}</p>
+                <p className="convo-last">
+                  {chat.lastMessage || "No messages yet"}
+                </p>
               </div>
 
               <div className="convo-meta">

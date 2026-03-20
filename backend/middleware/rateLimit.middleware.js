@@ -3,10 +3,12 @@ const rateLimit = require("express-rate-limit");
 // Strict limiter for auth endpoints — prevents brute-force
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 10,                   // 10 attempts per window per IP
+  max: 10, // 10 attempts per window per IP
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: "Too many attempts. Please wait 15 minutes and try again." },
+  message: {
+    message: "Too many attempts. Please wait 15 minutes and try again.",
+  },
 });
 
 // Looser limiter for search / general API

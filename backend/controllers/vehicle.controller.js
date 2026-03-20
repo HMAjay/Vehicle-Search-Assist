@@ -17,9 +17,9 @@ const getVehicleByNumber = async (req, res, next) => {
     }
 
     res.json({
-      ownerId:       user._id,
-      ownerName:     user.name,
-      vehicleName:   user.vehicleName,
+      ownerId: user._id,
+      ownerName: user.name,
+      vehicleName: user.vehicleName,
       vehicleNumber: user.vehicleNumber,
     });
   } catch (err) {
