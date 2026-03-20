@@ -148,10 +148,6 @@ The backend (Render) does not call Gmail directly. Instead, `mailer.js` fetches 
 
 `getInbox` fetches all messages involving the user, sorted newest-first. It iterates once and uses the first occurrence of each conversation partner as the preview entry (always the most recent message). It also tracks `hasUnread` if any unseen message exists from that person — a single pass, no extra queries.
 
-### Chat — Optimistic Updates
-
-Before the `sendMessage` API call resolves, `Chat.jsx` appends a temporary message object `{ _id: "tmp-${Date.now()}", ... }` to the local state. The input is cleared and refocused via `requestAnimationFrame` to avoid mobile keyboard dismissal. The real message arrives on the next 4-second poll.
-
 ### Rate Limiting
 
 `authLimiter`: 10 requests per 15 minutes per IP — applied to all `/auth` routes.  
