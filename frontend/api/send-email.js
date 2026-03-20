@@ -26,7 +26,7 @@ export default async function handler(req, res) {
     await transporter.sendMail({
       from: `"VahanConnect" <${process.env.MAIL_USER}>`,
       to,
-      subject: "Your VahanConnect OTP",
+      subject: "Your VahanConnect Account OTP",
       html: `
         <div style="font-family:monospace;max-width:420px;margin:0 auto;padding:32px;background:#0d1117;color:#e8edf3;border-radius:12px;">
           <h2 style="color:#f5a623;letter-spacing:0.1em;margin:0 0 8px;">VAHANCONNECT</h2>
