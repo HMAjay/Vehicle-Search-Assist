@@ -1,9 +1,11 @@
 const express = require("express");
-const router  = express.Router();
+const router = express.Router();
 
 const { getVehicleByNumber } = require("../controllers/vehicle.controller");
 const { protect } = require("../middleware/auth.middleware");
-router.get("/count", async (req, res, next) => {
+const { searchLimiter } = require("../middleware/rateLimit.middleware");
+
+router.get("/count", searchLimiter, async (req, res, next) => {
   try {
     const User = require("../models/User");
     const count = await User.countDocuments();
@@ -12,6 +14,7 @@ router.get("/count", async (req, res, next) => {
     next(err);
   }
 });
-router.get("/:vehicleNumber", protect, getVehicleByNumber);
+
+router.get("/:vehicleNumber", searchLimiter, protect, getVehicleByNumber);
 
 module.exports = router;
