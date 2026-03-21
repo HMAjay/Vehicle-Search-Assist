@@ -154,8 +154,8 @@ export default function HomePage() {
           </p>
           <div className="home-dev-card">
             <div className="home-dev-avatar">AJ</div>
-            <h3 className="home-dev-name">Ajay</h3>
-            <p className="home-dev-role">Full Stack Developer</p>
+            <h3 className="home-dev-name">H M Ajay</h3>
+            <p className="home-dev-role">Information Science Engineer</p>
             <p className="home-dev-bio">
               Passionate about building tools that solve real problems.
               VahanConnect started as an idea to make vehicle-owner
@@ -221,11 +221,7 @@ export default function HomePage() {
           <img src="/logo.png" alt="logo" className="home-footer-logo" />
           VahanConnect
         </div>
-        <span
-          className="home-footer-copy"
-          onClick={() => navigate("/")}
-          style={{ cursor: "pointer" }}
-        >
+        <span className="home-footer-copy">
           © 2026 VahanConnect. Built by Ajay.
         </span>
         <div className="home-footer-links">

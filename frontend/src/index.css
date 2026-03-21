@@ -590,7 +590,7 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
 }
 .inbox-sub {
   font-size: 0.85rem;
-  color: var(--text-muted);
+  color: var(--text-mid);
   margin-bottom: 24px;
 }
 .convo-item {
@@ -1006,6 +1006,9 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   font-size: 0.8rem; color: var(--text-muted);
   text-decoration: none; transition: color 0.2s;
 }
+.home-footer-links a{
+  font-size:1rem;
+}
 .home-footer-links a:hover { color: var(--text-mid); }
 
 /* ── Responsive ── */
@@ -1026,7 +1029,6 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   display: block;
   filter: brightness(0) saturate(100%) invert(72%) sepia(50%) saturate(800%) hue-rotate(5deg) brightness(105%);
 }
-/* ── Add these blocks to index.css ──────────────────────────────────── */
 
 /* ── Dashboard hero layout ────────────────────────────────────────── */
 .dash-hero {
