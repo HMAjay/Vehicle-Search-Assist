@@ -29,15 +29,36 @@ async function request(path, options = {}) {
 
 export const api = {
   // Auth (no token needed)
-  sendOtp:   (email)           => request("/auth/send-otp",   { method: "POST", body: JSON.stringify({ email }) }),
-  verifyOtp: (email, otp)      => request("/auth/verify-otp", { method: "POST", body: JSON.stringify({ email, otp }) }),
-  register:  (payload)         => request("/auth/register",   { method: "POST", body: JSON.stringify(payload) }),
-  login:     (email, password) => request("/auth/login",      { method: "POST", body: JSON.stringify({ email, password }) }),
+  sendOtp: (email) =>
+    request("/auth/send-otp", {
+      method: "POST",
+      body: JSON.stringify({ email }),
+    }),
+  verifyOtp: (email, otp) =>
+    request("/auth/verify-otp", {
+      method: "POST",
+      body: JSON.stringify({ email, otp }),
+    }),
+  register: (payload) =>
+    request("/auth/register", {
+      method: "POST",
+      body: JSON.stringify(payload),
+    }),
+  login: (email, password) =>
+    request("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
+    }),
   getVehicleCount: () => request("/vehicles/count"),
   // Protected (token required)
-  getVehicle:      (vnum)                       => request(`/vehicles/${vnum}`),
-  sendMessage:     (senderId, receiverId, text) => request("/messages/send",                        { method: "POST", body: JSON.stringify({ senderId, receiverId, text }) }),
-  getConversation: (otherId, myId)              => request(`/messages/chat/${otherId}/${myId}`),
-  getInbox:        (userId)                     => request(`/messages/inbox/${userId}`),
-  getUnreadCount:  (userId)                     => request(`/messages/unread-count/${userId}`),
+  getVehicle: (vnum) => request(`/vehicles/${vnum}`),
+  sendMessage: (senderId, receiverId, text) =>
+    request("/messages/send", {
+      method: "POST",
+      body: JSON.stringify({ senderId, receiverId, text }),
+    }),
+  getConversation: (otherId, myId) =>
+    request(`/messages/chat/${otherId}/${myId}`),
+  getInbox: (userId) => request(`/messages/inbox/${userId}`),
+  getUnreadCount: (userId) => request(`/messages/unread-count/${userId}`),
 };
