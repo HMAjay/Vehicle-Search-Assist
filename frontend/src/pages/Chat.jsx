@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { api } from "../utils/api";
 import { getUser } from "../utils/auth";
+import ConfirmModal from "../components/ConfirmModal";
 import { getDisplayName, getInitials, normalizeName } from "../utils/userDisplay";
 
 function formatDateLabel(dateStr) {
@@ -34,7 +35,10 @@ export default function Chat() {
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [otherName, setOtherName] = useState("");
+  const [error, setError] = useState("");
 
   const bottomRef = useRef(null);
   const inputRef = useRef(null);
@@ -81,8 +85,10 @@ export default function Chat() {
       const data = await api.getConversation(userId, me._id);
       setMessages(data);
       resolveName(data);
+      setError("");
     } catch (err) {
       console.error(err);
+      setError(err.message || "Could not load conversation.");
     }
   }, [userId, me._id, resolveName]);
 
@@ -120,6 +126,7 @@ export default function Chat() {
     setSending(true);
     shouldScrollRef.current = true;
     setText("");
+    setError("");
 
     requestAnimationFrame(() => {
       inputRef.current?.focus({ preventScroll: true });
@@ -138,9 +145,26 @@ export default function Chat() {
       await api.sendMessage(me._id, userId, trimmed);
     } catch (err) {
       console.error(err);
+      setError(err.message || "Could not send message.");
     } finally {
       sendingRef.current = false;
       setSending(false);
+    }
+  };
+
+  const handleDeleteConversation = async () => {
+    if (deleting) return;
+
+    setDeleting(true);
+    try {
+      await api.deleteConversation(userId, me._id);
+      setShowDeleteModal(false);
+      navigate("/inbox");
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Could not delete conversation.");
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -149,6 +173,19 @@ export default function Chat() {
 
   return (
     <div className="chat-shell">
+      {showDeleteModal && (
+        <ConfirmModal
+          eyebrow="Delete chat"
+          title={`Delete conversation with ${displayName}?`}
+          message="This will remove the conversation from your inbox only. The other person will still keep their messages."
+          confirmLabel="Delete for me"
+          danger
+          busy={deleting}
+          onCancel={() => setShowDeleteModal(false)}
+          onConfirm={handleDeleteConversation}
+        />
+      )}
+
       <div className="chat-header">
         <button
           className="btn btn-ghost chat-back-btn"
@@ -165,12 +202,39 @@ export default function Chat() {
             <polyline points="15 18 9 12 15 6" />
           </svg>
         </button>
-        <div className="chat-avatar">{initials}</div>
-        <p className="chat-name">{displayName}</p>
+
+        <div className="chat-header-main">
+          <div className="chat-avatar">{initials}</div>
+          <p className="chat-name">{displayName}</p>
+        </div>
+
+        <button
+          className="btn btn-danger chat-delete-btn"
+          onClick={() => setShowDeleteModal(true)}
+          disabled={deleting}
+          aria-label="Delete conversation"
+          title="Delete conversation"
+        >
+          <svg
+            width="15"
+            height="15"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
+            <path d="M3 6h18" />
+            <path d="M8 6V4h8v2" />
+            <path d="M19 6l-1 14H6L5 6" />
+            <path d="M10 11v6M14 11v6" />
+          </svg>
+        </button>
       </div>
 
       <div className="chat-messages">
-        {messages.length === 0 && (
+        {error && <div className="err-msg">{error}</div>}
+
+        {messages.length === 0 && !error && (
           <div className="empty-state fade-in">
             <div className="empty-icon">Chat</div>
             <p className="empty-text">Start the conversation.</p>

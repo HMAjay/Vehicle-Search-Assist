@@ -1,5 +1,16 @@
 const Message = require("../models/Message");
 
+const visibleToUserFilter = (userId) => ({
+  deletedFor: { $ne: userId },
+});
+
+const conversationFilter = (myUserId, otherUserId) => ({
+  $or: [
+    { sender: myUserId, receiver: otherUserId },
+    { sender: otherUserId, receiver: myUserId },
+  ],
+});
+
 // ── POST /messages/send ───────────────────────────────────────────────────────
 const sendMessage = async (req, res, next) => {
   try {
@@ -45,18 +56,46 @@ const getConversation = async (req, res, next) => {
 
     // Mark incoming messages as seen
     await Message.updateMany(
-      { sender: otherUserId, receiver: myUserId, seen: false },
+      {
+        sender: otherUserId,
+        receiver: myUserId,
+        seen: false,
+        ...visibleToUserFilter(myUserId),
+      },
       { seen: true },
     );
 
     const messages = await Message.find({
-      $or: [
-        { sender: myUserId, receiver: otherUserId },
-        { sender: otherUserId, receiver: myUserId },
-      ],
+      ...conversationFilter(myUserId, otherUserId),
+      ...visibleToUserFilter(myUserId),
     }).sort({ createdAt: 1 });
 
     res.json(messages);
+  } catch (err) {
+    next(err);
+  }
+};
+
+const deleteConversation = async (req, res, next) => {
+  try {
+    const { otherUserId, myUserId } = req.params;
+
+    if (req.userId !== myUserId) {
+      return res.status(403).json({ message: "Forbidden" });
+    }
+
+    const result = await Message.updateMany({
+      ...conversationFilter(myUserId, otherUserId),
+      ...visibleToUserFilter(myUserId),
+    },
+    {
+      $addToSet: { deletedFor: myUserId },
+    });
+
+    res.json({
+      message: "Conversation deleted",
+      hiddenCount: result.modifiedCount,
+    });
   } catch (err) {
     next(err);
   }
@@ -74,6 +113,7 @@ const getInbox = async (req, res, next) => {
     // Sort newest first — first encounter per conversation = most recent message
     const messages = await Message.find({
       $or: [{ sender: userId }, { receiver: userId }],
+      ...visibleToUserFilter(userId),
     })
       .sort({ createdAt: -1 })
       .populate("sender", "name")
@@ -120,6 +160,7 @@ const getUnreadCount = async (req, res, next) => {
     const count = await Message.countDocuments({
       receiver: userId,
       seen: false,
+      ...visibleToUserFilter(userId),
     });
     res.json({ count });
   } catch (err) {
@@ -127,4 +168,10 @@ const getUnreadCount = async (req, res, next) => {
   }
 };
 
-module.exports = { sendMessage, getConversation, getInbox, getUnreadCount };
+module.exports = {
+  sendMessage,
+  getConversation,
+  deleteConversation,
+  getInbox,
+  getUnreadCount,
+};

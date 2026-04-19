@@ -4,6 +4,7 @@ const router = express.Router();
 const {
   sendMessage,
   getConversation,
+  deleteConversation,
   getInbox,
   getUnreadCount,
 } = require("../controllers/message.controller");
@@ -16,6 +17,12 @@ router.get(
   searchLimiter,
   protect,
   getConversation,
+);
+router.delete(
+  "/chat/:otherUserId/:myUserId",
+  searchLimiter,
+  protect,
+  deleteConversation,
 );
 router.get("/inbox/:userId", searchLimiter, protect, getInbox);
 router.get("/unread-count/:userId", searchLimiter, protect, getUnreadCount);

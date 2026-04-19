@@ -59,6 +59,10 @@ export const api = {
     }),
   getConversation: (otherId, myId) =>
     request(`/messages/chat/${otherId}/${myId}`),
+  deleteConversation: (otherId, myId) =>
+    request(`/messages/chat/${otherId}/${myId}`, {
+      method: "DELETE",
+    }),
   getInbox: (userId) => request(`/messages/inbox/${userId}`),
   getUnreadCount: (userId) => request(`/messages/unread-count/${userId}`),
 };

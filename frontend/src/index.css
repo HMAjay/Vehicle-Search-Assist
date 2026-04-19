@@ -485,6 +485,13 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   background: var(--bg-surface);
   flex-shrink: 0;
 }
+.chat-header-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 .chat-avatar {
   width: 36px; height: 36px;
   background: var(--amber-glow);
@@ -497,8 +504,20 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   color: var(--amber);
   font-family: var(--mono);
 }
-.chat-name { font-weight: 500; font-size: 0.95rem; }
+.chat-name {
+  font-weight: 500;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .chat-status { font-size: 0.75rem; color: var(--green); font-family: var(--mono); }
+.chat-delete-btn,
+.convo-delete-btn {
+  min-width: 0;
+  padding: 9px 10px;
+  flex-shrink: 0;
+}
 .chat-messages {
   flex: 1;
   overflow-y: auto;
@@ -646,6 +665,9 @@ h1, h2, h3, h4 { line-height: 1.2; letter-spacing: -0.02em; }
   background: var(--amber);
   border-radius: 50%;
   margin: 4px auto 0;
+}
+.convo-delete-btn {
+  margin-left: 4px;
 }
 
 /* ── Empty state ──────────────────────────────────────────────────── */

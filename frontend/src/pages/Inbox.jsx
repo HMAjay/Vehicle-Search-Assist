@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../utils/api";
 import { getUser } from "../utils/auth";
+import ConfirmModal from "../components/ConfirmModal";
 import { getInitials } from "../utils/userDisplay";
 
 function formatTime(dateStr) {
@@ -19,6 +20,9 @@ function formatTime(dateStr) {
 export default function Inbox() {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState("");
+  const [pendingDelete, setPendingDelete] = useState(null);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const user = getUser();
 
@@ -26,8 +30,10 @@ export default function Inbox() {
     try {
       const data = await api.getInbox(user._id);
       setChats(data);
+      setError("");
     } catch (err) {
       console.error(err);
+      setError(err.message || "Could not load inbox.");
     } finally {
       setLoading(false);
     }
@@ -39,10 +45,42 @@ export default function Inbox() {
     return () => clearInterval(id);
   }, [fetchInbox]);
 
+  const handleDeleteConversation = async () => {
+    if (!pendingDelete || deletingId) return;
+
+    setDeletingId(pendingDelete.userId);
+    try {
+      await api.deleteConversation(pendingDelete.userId, user._id);
+      setChats((prev) =>
+        prev.filter((chat) => chat.userId !== pendingDelete.userId),
+      );
+      setPendingDelete(null);
+      setError("");
+    } catch (err) {
+      console.error(err);
+      setError(err.message || "Could not delete conversation.");
+    } finally {
+      setDeletingId("");
+    }
+  };
+
   const unreadTotal = chats.filter((c) => c.hasUnread).length;
 
   return (
     <div className="inbox-shell">
+      {pendingDelete && (
+        <ConfirmModal
+          eyebrow="Delete chat"
+          title={`Delete conversation with ${pendingDelete.name}?`}
+          message="This will remove the conversation from your inbox only. The other person will still keep their messages."
+          confirmLabel="Delete for me"
+          danger
+          busy={deletingId === pendingDelete.userId}
+          onCancel={() => setPendingDelete(null)}
+          onConfirm={handleDeleteConversation}
+        />
+      )}
+
       <nav className="topnav">
         <span className="topnav-brand">VahanConnect</span>
         <button
@@ -74,6 +112,8 @@ export default function Inbox() {
               : `${chats.length} conversation${chats.length !== 1 ? "s" : ""}`}
         </p>
 
+        {error && <div className="err-msg">{error}</div>}
+
         {loading && (
           <div
             style={{ display: "flex", justifyContent: "center", padding: 40 }}
@@ -85,7 +125,7 @@ export default function Inbox() {
           </div>
         )}
 
-        {!loading && chats.length === 0 && (
+        {!loading && chats.length === 0 && !error && (
           <div className="empty-state fade-up">
             <div className="empty-icon">Inbox</div>
             <p className="empty-text">
@@ -98,6 +138,7 @@ export default function Inbox() {
 
         {chats.map((chat, i) => {
           const initials = getInitials(chat.name, "VC");
+          const isDeleting = deletingId === chat.userId;
 
           return (
             <div
@@ -121,6 +162,31 @@ export default function Inbox() {
                 <p className="convo-time">{formatTime(chat.time)}</p>
                 {chat.hasUnread && <div className="unread-dot" />}
               </div>
+
+              <button
+                className="btn btn-danger convo-delete-btn"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setPendingDelete(chat);
+                }}
+                disabled={isDeleting}
+                aria-label={`Delete conversation with ${chat.name}`}
+                title="Delete conversation"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                >
+                  <path d="M3 6h18" />
+                  <path d="M8 6V4h8v2" />
+                  <path d="M19 6l-1 14H6L5 6" />
+                  <path d="M10 11v6M14 11v6" />
+                </svg>
+              </button>
             </div>
           );
         })}
