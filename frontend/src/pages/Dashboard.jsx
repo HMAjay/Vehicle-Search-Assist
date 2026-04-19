@@ -4,6 +4,7 @@ import { api } from "../utils/api";
 import { getUser, clearUser } from "../utils/auth";
 import CarAnimation from "../components/CarAnimation";
 import ChatAnimation from "../components/ChatAnimation";
+import { getInitials } from "../utils/userDisplay";
 
 function SignOutModal({ onConfirm, onCancel }) {
   return (
@@ -100,13 +101,7 @@ export default function Dashboard() {
     }
   };
 
-  const initials =
-    user?.name
-      ?.split(" ")
-      .map((w) => w[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "?";
+  const initials = getInitials(user?.name, "ME");
 
   return (
     <div className="dash-shell">
@@ -117,7 +112,6 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Topnav */}
       <nav className="topnav">
         <span
           className="topnav-brand"
@@ -210,11 +204,10 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      {/* Body */}
       <main className="dash-body">
         {registered && (
           <div className="ok-msg fade-up" style={{ marginBottom: 24 }}>
-            🎉 Account created successfully. Welcome to VahanConnect!
+            Account created successfully. Welcome to VahanConnect!
           </div>
         )}
 
@@ -260,7 +253,7 @@ export default function Dashboard() {
           <div className="search-wrap">
             <input
               className="search-input"
-              placeholder="Enter vehicle number…"
+              placeholder="Enter vehicle number..."
               value={vehicleNumber}
               onChange={(e) => {
                 setVehicleNumber(e.target.value.toUpperCase());
@@ -277,7 +270,7 @@ export default function Dashboard() {
             >
               {searching ? (
                 <>
-                  <span className="spinner" /> Searching…
+                  <span className="spinner" /> Searching...
                 </>
               ) : (
                 "Search"

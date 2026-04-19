@@ -1,34 +1,27 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getUser } from "../utils/auth";
+import { getInitials } from "../utils/userDisplay";
 
 export default function View() {
-  const [vehicle, setVehicle] = useState(null);
+  const [vehicle] = useState(() =>
+    JSON.parse(localStorage.getItem("vehicleData") || "null"),
+  );
   const navigate = useNavigate();
   const me = getUser();
 
   useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("vehicleData") || "null");
-    if (!data) navigate("/dashboard");
-    else setVehicle(data);
-  }, [navigate]);
+    if (!vehicle) navigate("/dashboard");
+  }, [navigate, vehicle]);
 
   if (!vehicle) return null;
 
   const isSelf = vehicle.ownerId === me?._id;
-
-  const initials =
-    vehicle.ownerName
-      ?.split(" ")
-      .map((w) => w[0])
-      .slice(0, 2)
-      .join("")
-      .toUpperCase() || "?";
+  const initials = getInitials(vehicle.ownerName, "VC");
 
   return (
     <div className="view-shell">
       <div className="view-card fade-up">
-        {/* Header */}
         <div className="view-header">
           <span className="view-tag">Vehicle found</span>
           <p className="view-plate">{vehicle.vehicleNumber}</p>
@@ -37,7 +30,6 @@ export default function View() {
 
         <hr className="view-divider" />
 
-        {/* Owner */}
         <div className="view-owner">
           <div className="view-avatar">{initials}</div>
           <div className="view-owner-info">
@@ -48,7 +40,6 @@ export default function View() {
 
         <hr className="view-divider" />
 
-        {/* Actions */}
         <div className="view-actions" style={{ padding: "20px 28px 28px" }}>
           {isSelf ? (
             <div className="err-msg" style={{ flex: 1, textAlign: "center" }}>
@@ -58,7 +49,11 @@ export default function View() {
             <button
               className="btn btn-primary"
               style={{ flex: 1, padding: "12px" }}
-              onClick={() => navigate(`/chat/${vehicle.ownerId}`)}
+              onClick={() =>
+                navigate(`/chat/${vehicle.ownerId}`, {
+                  state: { name: vehicle.ownerName },
+                })
+              }
             >
               <svg
                 width="16"

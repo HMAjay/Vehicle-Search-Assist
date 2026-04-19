@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import process from "node:process";
 
 export default async function handler(req, res) {
   res.setHeader("Content-Type", "application/json");

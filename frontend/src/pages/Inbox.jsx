@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../utils/api";
 import { getUser } from "../utils/auth";
+import { getInitials } from "../utils/userDisplay";
 
 function formatTime(dateStr) {
   if (!dateStr) return "";
@@ -67,7 +68,7 @@ export default function Inbox() {
         </h1>
         <p className="inbox-sub fade-up d1">
           {loading
-            ? "Loading…"
+            ? "Loading..."
             : chats.length === 0
               ? "No conversations yet."
               : `${chats.length} conversation${chats.length !== 1 ? "s" : ""}`}
@@ -86,7 +87,7 @@ export default function Inbox() {
 
         {!loading && chats.length === 0 && (
           <div className="empty-state fade-up">
-            <div className="empty-icon">📭</div>
+            <div className="empty-icon">Inbox</div>
             <p className="empty-text">
               Search for a vehicle on the dashboard
               <br />
@@ -96,20 +97,16 @@ export default function Inbox() {
         )}
 
         {chats.map((chat, i) => {
-          const initials =
-            chat.name
-              ?.split(" ")
-              .map((w) => w[0])
-              .slice(0, 2)
-              .join("")
-              .toUpperCase() || "?";
+          const initials = getInitials(chat.name, "VC");
 
           return (
             <div
               key={chat.userId}
               className={`convo-item fade-up ${chat.hasUnread ? "unread" : ""}`}
               style={{ animationDelay: `${0.05 + i * 0.06}s` }}
-              onClick={() => navigate(`/chat/${chat.userId}`)}
+              onClick={() =>
+                navigate(`/chat/${chat.userId}`, { state: { name: chat.name } })
+              }
             >
               <div className="convo-avatar">{initials}</div>
 

@@ -29,7 +29,7 @@ export default function HomePage() {
         </div>
         <div className="home-nav-links">
           <a href="#how">How it works</a>
-          <a href="#developer">Developer</a>
+          <a href="#about">About</a>
         </div>
         <button
           className="btn btn-primary home-nav-cta"
@@ -140,9 +140,9 @@ export default function HomePage() {
       </section>
 
       {/* ── DEVELOPER ── */}
-      <section className="home-section" id="developer">
+      <section className="home-section" id="about">
         <div className="home-dev-outer">
-          <span className="view-tag">The developer</span>
+          <span className="view-tag">About</span>
           <h2 className="home-section-title" style={{ marginTop: 16 }}>
             Made by a developer,
             <br />

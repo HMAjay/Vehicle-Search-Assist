@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const MESSAGES = [
   {
@@ -27,39 +27,42 @@ export default function ChatAnimation() {
   const [showTyping, setShowTyping] = useState(false);
   const timersRef = useRef([]);
 
-  const schedule = (fn, delay) => {
-    const id = setTimeout(fn, delay);
-    timersRef.current.push(id);
-  };
-
-  const runLoop = useCallback(() => {
-    timersRef.current.forEach(clearTimeout);
-    timersRef.current = [];
-    setVisible([]);
-    setShowTyping(false);
-    schedule(() => setVisible(["b1"]), 600);
-    schedule(() => setShowTyping(true), 1400);
-    schedule(() => {
-      setShowTyping(false);
-      setVisible((v) => [...v, "b2"]);
-    }, 2600);
-    schedule(() => setVisible((v) => [...v, "b3"]), 3600);
-    schedule(() => setShowTyping(true), 4500);
-    schedule(() => {
-      setShowTyping(false);
-      setVisible((v) => [...v, "b4"]);
-    }, 5600);
-    schedule(runLoop, 8200);
-  }, []);
-
   useEffect(() => {
+    const schedule = (fn, delay) => {
+      const id = setTimeout(fn, delay);
+      timersRef.current.push(id);
+    };
+
+    const clearAllTimers = () => {
+      timersRef.current.forEach(clearTimeout);
+      timersRef.current = [];
+    };
+
+    const runLoop = () => {
+      clearAllTimers();
+      setVisible([]);
+      setShowTyping(false);
+      schedule(() => setVisible(["b1"]), 600);
+      schedule(() => setShowTyping(true), 1400);
+      schedule(() => {
+        setShowTyping(false);
+        setVisible((v) => [...v, "b2"]);
+      }, 2600);
+      schedule(() => setVisible((v) => [...v, "b3"]), 3600);
+      schedule(() => setShowTyping(true), 4500);
+      schedule(() => {
+        setShowTyping(false);
+        setVisible((v) => [...v, "b4"]);
+      }, 5600);
+      schedule(runLoop, 8200);
+    };
+
     runLoop();
-    return () => timersRef.current.forEach(clearTimeout);
-  }, [runLoop]);
+    return clearAllTimers;
+  }, []);
 
   return (
     <div className="chat-anim-wrap">
-      {/* Header */}
       <div className="chat-anim-header">
         <div className="chat-anim-avatar">RS</div>
         <div>
@@ -71,7 +74,6 @@ export default function ChatAnimation() {
         </div>
       </div>
 
-      {/* Messages */}
       <div className="chat-anim-messages">
         {MESSAGES.map((msg) => (
           <div
@@ -92,7 +94,6 @@ export default function ChatAnimation() {
           </div>
         ))}
 
-        {/* Typing indicator */}
         <div
           className="chat-anim-typing"
           style={{
@@ -114,9 +115,8 @@ export default function ChatAnimation() {
         </div>
       </div>
 
-      {/* Input bar */}
       <div className="chat-anim-inputbar">
-        <span className="chat-anim-placeholder">Type a message…</span>
+        <span className="chat-anim-placeholder">Type a message...</span>
         <div className="chat-anim-send-btn">
           <svg width="9" height="9" viewBox="0 0 10 10" fill="none">
             <path
